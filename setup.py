@@ -18,7 +18,8 @@ setup(name='Products.PythonScripts',
       version = '2.13.0dev',
       url='http://pypi.python.org/pypi/Products.PythonScripts',
       license='ZPL 2.1',
-      description="",
+      description="Provides support for restricted execution of Python "
+                  "scripts in Zope 2.",
       author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
       long_description=open('README.txt').read() + '\n' +
