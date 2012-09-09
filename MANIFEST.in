@@ -1,0 +1,6 @@
+include *.txt
+
+recursive-include src/Products *
+
+global-exclude *.pyc
+global-exclude *.pyo
