@@ -64,10 +64,23 @@ class VerifiedPythonScript(PythonScript):
 
 class PythonScriptTestBase(unittest.TestCase):
     def setUp(self):
+        from AccessControl import ModuleSecurityInfo as MSI
+        from AccessControl.SecurityInfo import _moduleSecurity
+        from AccessControl.SecurityInfo import _appliedModuleSecurity
+        self._ms_before = _moduleSecurity.copy()
+        self._ams_before = _appliedModuleSecurity.copy()
+        MSI('string').declarePublic('split')
+        MSI('sets').declarePublic('Set')
         newSecurityManager(None, None)
 
     def tearDown(self):
+        from AccessControl.SecurityInfo import _moduleSecurity
+        from AccessControl.SecurityInfo import _appliedModuleSecurity
         noSecurityManager()
+        _moduleSecurity.clear()
+        _moduleSecurity.update(self._ms_before)
+        _appliedModuleSecurity.clear()
+        _appliedModuleSecurity.update(self._ams_before)
 
     def _newPS(self, txt, bind=None):
         ps = VerifiedPythonScript('ps')
@@ -127,9 +140,6 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
     def testArithmetic(self):
         res = self._newPS('return 1 * 5 + 4 / 2 - 6')()
         self.assertEqual(res, 1)
-
-    def testCollector2295(self):
-        res = self._newPS('if False:\n  pass\n#hi')
 
     def testReduce(self):
         res = self._newPS('return reduce(lambda x, y: x + y, [1,3,5,7])')()
