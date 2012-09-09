@@ -4,6 +4,7 @@ Changelog
 2.13.2 (unreleased)
 -------------------
 
+- Correct module security declaration for our `standard` module.
 
 2.13.1 (2012-09-09)
 -------------------

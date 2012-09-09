@@ -40,7 +40,7 @@ from DocumentTemplate.DT_Var import restructured_text
 from DocumentTemplate.security import RestrictedDTML
 from ZPublisher.HTTPRequest import record
 
-security = ModuleSecurityInfo()
+security = ModuleSecurityInfo('Products.PythonScripts.standard')
 
 security.declarePublic('special_formats',
                        'whole_dollars',
