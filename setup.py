@@ -15,7 +15,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Products.PythonScripts',
-      version = '2.13.2',
+      version = '2.13.3dev',
       url='http://pypi.python.org/pypi/Products.PythonScripts',
       license='ZPL 2.1',
       description="Provides support for restricted execution of Python "
