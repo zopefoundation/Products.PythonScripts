@@ -10,27 +10,26 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-import os, unittest, warnings
+import os
+import unittest
+import warnings
 
-from Products.PythonScripts.PythonScript import PythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from RestrictedPython.tests.verify import verify
 
+from Products.PythonScripts.PythonScript import PythonScript
 
-if __name__=='__main__':
-    here = os.getcwd()
-else:
-    here = os.path.dirname(__file__)
-    if not here:
-        here = os.getcwd()
 
-class WarningInterceptor:
+HERE = os.path.dirname(__file__)
+
+
+class WarningInterceptor(object):
 
     _old_stderr = None
     _our_stderr_stream = None
 
-    def _trap_warning_output( self ):
+    def _trap_warning_output(self):
 
         if self._old_stderr is not None:
             return
@@ -41,7 +40,7 @@ class WarningInterceptor:
         self._old_stderr = sys.stderr
         self._our_stderr_stream = sys.stderr = StringIO()
 
-    def _free_warning_output( self ):
+    def _free_warning_output(self):
 
         if self._old_stderr is None:
             return
@@ -51,9 +50,11 @@ class WarningInterceptor:
 
 # Test Classes
 
+
 def readf(name):
-    path = os.path.join(here, 'tscripts', '%s.ps' % name)
+    path = os.path.join(HERE, 'tscripts', '%s.ps' % name)
     return open(path, 'r').read()
+
 
 class VerifiedPythonScript(PythonScript):
 
@@ -63,14 +64,15 @@ class VerifiedPythonScript(PythonScript):
 
 
 class PythonScriptTestBase(unittest.TestCase):
+
     def setUp(self):
-        from AccessControl import ModuleSecurityInfo as MSI
+        from AccessControl import ModuleSecurityInfo
         from AccessControl.SecurityInfo import _moduleSecurity
         from AccessControl.SecurityInfo import _appliedModuleSecurity
         self._ms_before = _moduleSecurity.copy()
         self._ams_before = _appliedModuleSecurity.copy()
-        MSI('string').declarePublic('split')
-        MSI('sets').declarePublic('Set')
+        ModuleSecurityInfo('string').declarePublic('split')
+        ModuleSecurityInfo('sets').declarePublic('Set')
         newSecurityManager(None, None)
 
     def tearDown(self):
@@ -88,7 +90,7 @@ class PythonScriptTestBase(unittest.TestCase):
         ps.write(txt)
         ps._makeFunction()
         if ps.errors:
-            raise SyntaxError, ps.errors[0]
+            raise SyntaxError(ps.errors[0])
         return ps
 
     def _filePS(self, fname, bind=None):
@@ -97,8 +99,9 @@ class PythonScriptTestBase(unittest.TestCase):
         ps.write(readf(fname))
         ps._makeFunction()
         if ps.errors:
-            raise SyntaxError, ps.errors[0]
+            raise SyntaxError(ps.errors[0])
         return ps
+
 
 class TestPythonScriptNoAq(PythonScriptTestBase):
 
@@ -125,7 +128,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testParam2(self):
         eq = self.assertEqual
-        one, two = self._newPS('##parameters=x,y\nreturn x,y')('one','two')
+        one, two = self._newPS('##parameters=x,y\nreturn x,y')('one', 'two')
         eq(one, 'one')
         eq(two, 'two')
 
@@ -226,7 +229,8 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertEqual(res, 3)
 
     def testDateTime(self):
-        res = self._newPS("return DateTime('2007/12/10').strftime('%d.%m.%Y')")()
+        res = self._newPS(
+            "return DateTime('2007/12/10').strftime('%d.%m.%Y')")()
         self.assertEqual(res, '10.12.2007')
 
     def testRaiseSystemExitLaunchpad257269(self):
@@ -239,7 +243,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
 
 class TestPythonScriptErrors(PythonScriptTestBase):
-    
+
     def assertPSRaises(self, error, path=None, body=None):
         assert not (path and body) and (path or body)
         if body is None:
@@ -271,11 +275,12 @@ class TestPythonScriptErrors(PythonScriptTestBase):
                    "setattr(%s, '_getattr_', lambda x, y: True)",
                    "del %s.splat",
                    ]
-        
+
         for defn, name in cases:
             for asn in assigns:
                 f = self._newPS(defn + "\n" + asn % name)
                 self.assertRaises(TypeError, f)
+
 
 class TestPythonScriptGlobals(PythonScriptTestBase, WarningInterceptor):
 
@@ -313,11 +318,11 @@ class TestPythonScriptGlobals(PythonScriptTestBase, WarningInterceptor):
         try:
             f = self._filePS('filepath')
             self._trap_warning_output()
-            results = f._exec({'container': warnMe}, (), {})
+            f._exec({'container': warnMe}, (), {})
             self._free_warning_output()
             warning = self._our_stderr_stream.getvalue()
             self.failUnless('UserWarning: foo' in warning)
-        except TypeError, e:
+        except TypeError as e:
             self.fail(e)
 
 
@@ -327,19 +332,3 @@ class PythonScriptInterfaceConformanceTests(unittest.TestCase):
         from zope.interface.verify import verifyClass
         from webdav.interfaces import IWriteLock
         verifyClass(IWriteLock, PythonScript)
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestPythonScriptNoAq))
-    suite.addTest(unittest.makeSuite(TestPythonScriptErrors))
-    suite.addTest(unittest.makeSuite(TestPythonScriptGlobals))
-    suite.addTest(unittest.makeSuite(PythonScriptInterfaceConformanceTests))
-    return suite
-
-
-def main():
-    unittest.TextTestRunner().run(test_suite())
-
-
-if __name__ == '__main__':
-    main()

@@ -14,8 +14,6 @@
 
 This product provides support for Script objects containing restricted
 Python code.
-
-$Id$
 """
 
 from logging import getLogger
@@ -52,7 +50,7 @@ from zExceptions import Forbidden
 LOG = getLogger('PythonScripts')
 
 # Track the Python bytecode version
-import imp
+import imp  # NOQA
 Python_magic = imp.get_magic()
 del imp
 
@@ -71,6 +69,7 @@ _default_file = os.path.join(package_home(globals()),
 
 _marker = []  # Create a new marker object
 
+
 def manage_addPythonScript(self, id, REQUEST=None, submit=None):
     """Add a Python script to a folder.
     """
@@ -78,14 +77,18 @@ def manage_addPythonScript(self, id, REQUEST=None, submit=None):
     id = self._setObject(id, PythonScript(id))
     if REQUEST is not None:
         file = REQUEST.form.get('file', '')
-        if type(file) is not type(''): file = file.read()
+        if not isinstance(file, str):
+            file = file.read()
         if not file:
             file = open(_default_file).read()
         self._getOb(id).write(file)
-        try: u = self.DestinationURL()
-        except: u = REQUEST['URL1']
-        if submit==" Add and Edit ": u="%s/%s" % (u,quote(id))
-        REQUEST.RESPONSE.redirect(u+'/manage_main')
+        try:
+            u = self.DestinationURL()
+        except Exception:
+            u = REQUEST['URL1']
+        if submit == " Add and Edit ":
+            u = "%s/%s" % (u, quote(id))
+        REQUEST.RESPONSE.redirect(u + '/manage_main')
     return ''
 
 
@@ -96,7 +99,7 @@ class PythonScript(Script, Historical, Cacheable):
     not attempt to use the "exec" statement or certain restricted builtins.
     """
 
-    meta_type='Script (Python)'
+    meta_type = 'Script (Python)'
     _proxy_roles = ()
 
     _params = _body = ''
@@ -121,19 +124,22 @@ class PythonScript(Script, Historical, Cacheable):
     security.declareObjectProtected('View')
     security.declareProtected('View', '__call__')
 
-    security.declareProtected('View management screens',
-      'ZPythonScriptHTML_editForm', 'manage_main', 'read',
-      'ZScriptHTML_tryForm', 'PrincipiaSearchSource',
-      'document_src', 'params', 'body', 'get_filepath')
+    security.declareProtected(
+        'View management screens',
+        'ZPythonScriptHTML_editForm', 'manage_main', 'read',
+        'ZScriptHTML_tryForm', 'PrincipiaSearchSource',
+        'document_src', 'params', 'body', 'get_filepath')
 
     ZPythonScriptHTML_editForm = DTMLFile('www/pyScriptEdit', globals())
     manage = manage_main = ZPythonScriptHTML_editForm
     ZPythonScriptHTML_editForm._setName('ZPythonScriptHTML_editForm')
 
-    security.declareProtected('Change Python Scripts',
-      'ZPythonScriptHTML_editAction',
-      'ZPythonScript_setTitle', 'ZPythonScript_edit',
-      'ZPythonScriptHTML_upload', 'ZPythonScriptHTML_changePrefs')
+    security.declareProtected(
+        'Change Python Scripts',
+        'ZPythonScriptHTML_editAction',
+        'ZPythonScript_setTitle', 'ZPythonScript_edit',
+        'ZPythonScriptHTML_upload', 'ZPythonScriptHTML_changePrefs')
+
     def ZPythonScriptHTML_editAction(self, REQUEST, title, params, body):
         """Change the script's main parameters."""
         self.ZPythonScript_setTitle(title)
@@ -151,20 +157,22 @@ class PythonScript(Script, Historical, Cacheable):
     def ZPythonScript_edit(self, params, body):
         self._validateProxy()
         if self.wl_isLocked():
-            raise ResourceLockedError, "The script is locked via WebDAV."
-        if type(body) is not type(''):
+            raise ResourceLockedError("The script is locked via WebDAV.")
+        if not isinstance(body, str):
             body = body.read()
-        if self._params <> params or self._body <> body or self._v_change:
+
+        if self._params != params or self._body != body or self._v_change:
             self._params = str(params)
             self.write(body)
 
     def ZPythonScriptHTML_upload(self, REQUEST, file=''):
         """Replace the body of the script with the text in file."""
         if self.wl_isLocked():
-            raise ResourceLockedError, "The script is locked via WebDAV."
+            raise ResourceLockedError("The script is locked via WebDAV.")
 
-        if type(file) is not type(''):
-            if not file: raise ValueError, 'File not specified'
+        if not instance(file, str):
+            if not file:
+                raise ValueError('File not specified')
             file = file.read()
 
         self.write(file)
@@ -175,23 +183,24 @@ class PythonScript(Script, Historical, Cacheable):
     def ZPythonScriptHTML_changePrefs(self, REQUEST, height=None, width=None,
                                       dtpref_cols="100%", dtpref_rows="20"):
         """Change editing preferences."""
-        dr = {"Taller":5, "Shorter":-5}.get(height, 0)
-        dc = {"Wider":5, "Narrower":-5}.get(width, 0)
-        if isinstance(height, int): dtpref_rows = height
-        if isinstance(width, int) or \
-           isinstance(width, str) and width.endswith('%'):
+        dr = {"Taller": 5, "Shorter": -5}.get(height, 0)
+        dc = {"Wider": 5, "Narrower": -5}.get(width, 0)
+        if isinstance(height, int):
+            dtpref_rows = height
+        if (isinstance(width, int) or
+                isinstance(width, str) and width.endswith('%')):
             dtpref_cols = width
         rows = str(max(1, int(dtpref_rows) + dr))
         cols = str(dtpref_cols)
         if cols.endswith('%'):
-           cols = str(min(100, max(25, int(cols[:-1]) + dc))) + '%'
+            cols = str(min(100, max(25, int(cols[:-1]) + dc))) + '%'
         else:
-           cols = str(max(35, int(cols) + dc))
+            cols = str(max(35, int(cols) + dc))
         e = (DateTime("GMT") + 365).rfc822()
         setCookie = REQUEST["RESPONSE"].setCookie
         setCookie("dtpref_rows", rows, path='/', expires=e)
         setCookie("dtpref_cols", cols, path='/', expires=e)
-        REQUEST.other.update({"dtpref_cols":cols, "dtpref_rows":rows})
+        REQUEST.other.update({"dtpref_cols": cols, "dtpref_rows": rows})
         return self.manage_main(self, REQUEST)
 
     def ZScriptHTML_tryParams(self):
@@ -200,7 +209,7 @@ class PythonScript(Script, Historical, Cacheable):
         for name in self._params.split(','):
 
             name = name.strip()
-            if name and name[0] != '*' and re.match('\w',name):
+            if name and name[0] != '*' and re.match('\w', name):
                 param_names.append(name.split('=', 1)[0].strip())
         return param_names
 
@@ -208,12 +217,12 @@ class PythonScript(Script, Historical, Cacheable):
                               historyComparisonResults=''):
         return PythonScript.inheritedAttribute('manage_historyCompare')(
             self, rev1, rev2, REQUEST,
-            historyComparisonResults=html_diff(rev1.read(), rev2.read()) )
+            historyComparisonResults=html_diff(rev1.read(), rev2.read()))
 
     def __setstate__(self, state):
         Script.__setstate__(self, state)
         if (getattr(self, 'Python_magic', None) != Python_magic or
-            getattr(self, 'Script_magic', None) != Script_magic):
+                getattr(self, 'Script_magic', None) != Script_magic):
             global _log_complaint
             if _log_complaint:
                 LOG.info(_log_complaint)
@@ -277,7 +286,10 @@ class PythonScript(Script, Historical, Cacheable):
         g['__name__'] = 'script'
 
         l = {}
-        exec code in g, l
+        if sys.version_info > (3, 0):
+            exec(code, g, l)
+        else:
+            exec code in g, l  # NOQA
         f = l.values()[0]
         self._v_ft = (f.func_code, g, f.func_defaults or ())
         return f
@@ -317,13 +329,11 @@ class PythonScript(Script, Historical, Cacheable):
                 # Got a cached value.
                 return result
 
-        #__traceback_info__ = bound_names, args, kw, self.func_defaults
-
         ft = self._v_ft
         if ft is None:
             __traceback_supplement__ = (
                 PythonScriptTracebackSupplement, self)
-            raise RuntimeError, '%s %s has errors.' % (self.meta_type, self.id)
+            raise RuntimeError('%s %s has errors.' % (self.meta_type, self.id))
 
         fcode, g, fadefs = ft
         g = g.copy()
@@ -337,7 +347,8 @@ class PythonScript(Script, Historical, Cacheable):
         try:
             result = f(*args, **kw)
         except SystemExit:
-            raise ValueError('SystemExit cannot be raised within a PythonScript')
+            raise ValueError(
+                'SystemExit cannot be raised within a PythonScript')
 
         if keyset is not None:
             # Store the result in the cache.
@@ -359,38 +370,46 @@ class PythonScript(Script, Historical, Cacheable):
     def get_filepath(self):
         return self.meta_type + ':' + '/'.join(self.getPhysicalPath())
 
-    def manage_haveProxy(self,r): return r in self._proxy_roles
+    def manage_haveProxy(self, r):
+        return r in self._proxy_roles
 
     def _validateProxy(self, roles=None):
-        if roles is None: roles = self._proxy_roles
-        if not roles: return
+        if roles is None:
+            roles = self._proxy_roles
+        if not roles:
+            return
         user = getSecurityManager().getUser()
         if user is not None and user.allowed(self, roles):
             return
-        raise Forbidden, ('You are not authorized to change <em>%s</em> '
-            'because you do not have proxy roles.\n<!--%s, %s-->'
-            % (self.id, user, roles))
+        raise Forbidden(
+            'You are not authorized to change <em>%s</em> '
+            'because you do not have proxy roles.\n<!--%s, %s-->' % (
+                self.id, user, roles))
 
-    security.declareProtected('Change proxy roles',
-      'manage_proxyForm', 'manage_proxy')
+    security.declareProtected(
+        'Change proxy roles',
+        'manage_proxyForm', 'manage_proxy')
 
     manage_proxyForm = DTMLFile('www/pyScriptProxy', globals())
+
     @requestmethod('POST')
     def manage_proxy(self, roles=(), REQUEST=None):
         "Change Proxy Roles"
         self._validateProxy(roles)
         self._validateProxy()
         self.ZCacheable_invalidate()
-        self._proxy_roles=tuple(roles)
-        if REQUEST: return MessageDialog(
-                    title  ='Success!',
-                    message='Your changes have been saved',
-                    action ='manage_main')
+        self._proxy_roles = tuple(roles)
+        if REQUEST:
+            return MessageDialog(
+                title='Success!',
+                message='Your changes have been saved',
+                action='manage_main')
 
-    security.declareProtected('Change Python Scripts',
-      'PUT', 'manage_FTPput', 'write',
-      'manage_historyCopy',
-      'manage_beforeHistoryCopy', 'manage_afterHistoryCopy')
+    security.declareProtected(
+        'Change Python Scripts',
+        'PUT', 'manage_FTPput', 'write',
+        'manage_historyCopy',
+        'manage_beforeHistoryCopy', 'manage_afterHistoryCopy')
 
     def PUT(self, REQUEST, RESPONSE):
         """ Handle HTTP PUT requests """
@@ -432,8 +451,8 @@ class PythonScript(Script, Historical, Cacheable):
                 k, v = line[2:].split('=', 1)
                 k = k.strip().lower()
                 v = v.strip()
-                if not mdata.has_key(k):
-                    raise SyntaxError, 'Unrecognized header line "%s"' % line
+                if k not in mdata:
+                    raise SyntaxError('Unrecognized header line "%s"' % line)
                 if v == mdata[k]:
                     # Unchanged value
                     continue
@@ -469,10 +488,10 @@ class PythonScript(Script, Historical, Cacheable):
         m = {
             'title': self.title,
             'parameters': self._params,
-           }
+        }
         bindmap = self.getBindingAssignments().getAssignedNames()
         for k, v in _nice_bind_names.items():
-            m['bind '+k] = bindmap.get(v, '')
+            m['bind ' + k] = bindmap.get(v, '')
         return m
 
     def read(self):
@@ -483,8 +502,10 @@ class PythonScript(Script, Historical, Cacheable):
         """
         # Construct metadata header lines, indented the same as the body.
         m = _first_indent.search(self._body)
-        if m: prefix = m.group(0) + '##'
-        else: prefix = '##'
+        if m:
+            prefix = m.group(0) + '##'
+        else:
+            prefix = '##'
 
         hlines = ['%s %s "%s"' % (prefix, self.meta_type, self.id)]
         mm = self._metadata_map().items()
@@ -504,9 +525,15 @@ class PythonScript(Script, Historical, Cacheable):
         hlines.append('')
         return ('\n' + prefix).join(hlines) + '\n' + self._body
 
-    def params(self): return self._params
-    def body(self): return self._body
-    def get_size(self): return len(self.read())
+    def params(self):
+        return self._params
+
+    def body(self):
+        return self._body
+
+    def get_size(self):
+        return len(self.read())
+
     getSize = get_size
 
     def PrincipiaSearchSource(self):
@@ -520,8 +547,8 @@ class PythonScript(Script, Historical, Cacheable):
             RESPONSE.setHeader('Content-Type', 'text/plain')
         return self.read()
 
-
 InitializeClass(PythonScript)
+
 
 class PythonScriptTracebackSupplement:
     """Implementation of ITracebackSupplement"""

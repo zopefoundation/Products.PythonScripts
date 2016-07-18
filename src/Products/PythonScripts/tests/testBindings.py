@@ -11,21 +11,17 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Test Bindings
-
-$Id$
-"""
 
 import unittest
-import ZODB
-import transaction
-from Acquisition import Implicit
+
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from OFS.ObjectManager import ObjectManager
 from OFS.Folder import Folder
+import transaction
 
-class SecurityManager:
+
+class SecurityManager(object):
 
     def __init__(self, reject=0):
         self.calls = []
@@ -57,25 +53,33 @@ class SecurityManager:
         self.calls.append(('removeContext', args))
         return 1
 
-class UnderprivilegedUser:
+
+class UnderprivilegedUser(object):
+
     def getId(self):
         return 'underprivileged'
 
     def allowed(self, object, object_roles=None):
         return 0
 
-class RivilegedUser:
+
+class RivilegedUser(object):
+
     def getId(self):
         return 'privileged'
 
     def allowed(self, object, object_roles=None):
         return 1
 
+
 class FauxRoot(ObjectManager):
+
     def getPhysicalPath(self):
         return ('',)
+
     def __repr__(self):
         return '<FauxRoot>'
+
 
 class FauxFolder(Folder):
 
@@ -91,6 +95,7 @@ class FauxFolder(Folder):
         return 'method called'
 
 InitializeClass(FauxFolder)
+
 
 class TestBindings(unittest.TestCase):
 
@@ -111,9 +116,6 @@ class TestBindings(unittest.TestCase):
 
     def _getRoot(self):
         from Testing.makerequest import makerequest
-        #true_root = self.connection.root()[ 'Application' ]
-        #true_root = self.connection.root()
-        #return makerequest(true_root)
         return makerequest(FauxRoot())
 
     def _makeTree(self):
@@ -122,13 +124,13 @@ class TestBindings(unittest.TestCase):
 
         guarded = FauxFolder()
         guarded._setId('guarded')
-        guarded.__roles__ = ( 'Manager', )
+        guarded.__roles__ = ('Manager', )
         root._setOb('guarded', guarded)
         guarded = root._getOb('guarded')
 
         open = FauxFolder()
         open._setId('open')
-        open.__roles__ = ( 'Anonymous', )
+        open.__roles__ = ('Anonymous', )
         guarded._setOb('open', open)
 
         bound_unused_container_ps = self._newPS('return 1')
@@ -147,9 +149,9 @@ class TestBindings(unittest.TestCase):
         guarded._setOb('bound_used_context_ps', bound_used_context_ps)
 
         bound_used_context_methodWithRoles_ps = self._newPS(
-                                           'return context.methodWithRoles()')
+            'return context.methodWithRoles()')
         guarded._setOb('bound_used_context_methodWithRoles_ps',
-                        bound_used_context_methodWithRoles_ps)
+                       bound_used_context_methodWithRoles_ps)
 
         container_ps = self._newPS('return container')
         guarded._setOb('container_ps', container_ps)
@@ -168,7 +170,6 @@ class TestBindings(unittest.TestCase):
     def _newPS(self, txt, bind=None):
         from Products.PythonScripts.PythonScript import PythonScript
         ps = PythonScript('ps')
-        #ps.ZBindings_edit(bind or {})
         ps.write(txt)
         ps._makeFunction()
         return ps
@@ -211,11 +212,11 @@ class TestBindings(unittest.TestCase):
             self.fail("str(container) didn't raise Unauthorized!")
 
         ps = guarded._getOb('bound_used_container_ps')
-        ps._proxy_roles = ( 'Manager', )
+        ps._proxy_roles = ('Manager', )
         ps()
 
         ps = guarded._getOb('container_str_ps')
-        ps._proxy_roles = ( 'Manager', )
+        ps._proxy_roles = ('Manager', )
         ps()
 
     def test_bound_used_container_allowed(self):
@@ -260,11 +261,11 @@ class TestBindings(unittest.TestCase):
             self.fail("str(context) didn't raise Unauthorized!")
 
         ps = guarded._getOb('bound_used_context_ps')
-        ps._proxy_roles = ( 'Manager', )
+        ps._proxy_roles = ('Manager', )
         ps()
 
         ps = guarded._getOb('context_str_ps')
-        ps._proxy_roles = ( 'Manager', )
+        ps._proxy_roles = ('Manager', )
         ps()
 
     def test_bound_used_context_allowed(self):
@@ -284,14 +285,12 @@ class TestBindings(unittest.TestCase):
         boundless_ps = self._newPS('return 42')
         guarded._setOb('boundless_ps', boundless_ps)
         boundless_ps = guarded._getOb('boundless_ps')
-        #
-        #   Clear the bindings, so that the script may execute.
-        #
-        boundless_ps.ZBindings_edit( {'name_context': '',
-                                      'name_container': '',
-                                      'name_m_self': '',
-                                      'name_ns': '',
-                                      'name_subpath': ''})
+        # Clear the bindings, so that the script may execute.
+        boundless_ps.ZBindings_edit({'name_context': '',
+                                     'name_container': '',
+                                     'name_m_self': '',
+                                     'name_ns': '',
+                                     'name_subpath': ''})
         self.assertEqual(boundless_ps(), 42)
 
     def test_bound_used_context_method_w_roles(self):
@@ -307,13 +306,3 @@ class TestBindings(unittest.TestCase):
         self.assertRaises(Unauthorized, ps)
         ps = guarded._getOb('bound_used_context_methodWithRoles_ps')
         self.assertEqual(ps(), 'method called')
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestBindings))
-    return suite
-
-
-if __name__ == '__main__':
-    unittest.main()

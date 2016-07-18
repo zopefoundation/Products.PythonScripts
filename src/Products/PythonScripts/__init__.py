@@ -10,13 +10,9 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-__doc__='''Python Scripts Product Initialization
-$Id$'''
 
 import PythonScript
-import standard
 
-# Temporary
 from Shared.DC import Scripts
 __module_aliases__ = (
     ('Products.PythonScripts.Script', Scripts.Script),
@@ -25,6 +21,7 @@ __module_aliases__ = (
 
 __roles__ = None
 __allow_access_to_unprotected_subobjects__ = 1
+
 
 def initialize(context):
     context.registerClass(
@@ -39,7 +36,6 @@ def initialize(context):
     _m['recompile'] = recompile
     _m['recompile__roles__'] = ('Manager',)
 
-# utility stuff
 
 def recompile(self):
     '''Recompile all Python Scripts'''
@@ -56,5 +52,3 @@ def recompile(self):
     if names:
         return 'The following Scripts were recompiled:\n' + '\n'.join(names)
     return 'No Scripts were found that required recompilation.'
-
-import patches

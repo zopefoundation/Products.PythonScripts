@@ -12,9 +12,10 @@
 from Products.PythonScripts.PythonScript import PythonScript
 from string import join
 
+
 def restricted_exec(self, body, varmap=None):
     ps = PythonScript('temp')
     if varmap is None:
         varmap = {}
     ps.ZPythonScript_edit(join(varmap.keys(), ','), body)
-    return apply(ps.__of__(self), varmap.values())
+    return ps.__of__(self)(varmap.values())

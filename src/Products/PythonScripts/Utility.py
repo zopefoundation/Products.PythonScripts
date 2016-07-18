@@ -13,8 +13,6 @@
 """Utility module for making simple security assertions for
    Python scripts."""
 
-__version__='$Revision: 1.6 $'[11:-2]
-
 # These have been relocated, and should be imported from AccessControl
 
-from AccessControl import allow_module, allow_class
+from AccessControl import allow_module, allow_class  # NOQA
