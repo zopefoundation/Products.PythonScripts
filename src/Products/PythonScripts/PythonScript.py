@@ -104,17 +104,11 @@ class PythonScript(Script, Historical, Cacheable):
     _v_change = 0
 
     manage_options = (
-        {'label':'Edit',
-         'action':'ZPythonScriptHTML_editForm',
-         'help': ('PythonScripts', 'PythonScript_edit.stx')},
-        ) + BindingsUI.manage_options + (
-        {'label':'Test',
-         'action':'ZScriptHTML_tryForm',
-         'help': ('PythonScripts', 'PythonScript_test.stx')},
-        {'label':'Proxy',
-         'action':'manage_proxyForm',
-         'help': ('OFSP','DTML-DocumentOrMethod_Proxy.stx')},
-        ) + Historical.manage_options + SimpleItem.manage_options + \
+        {'label': 'Edit', 'action': 'ZPythonScriptHTML_editForm'},
+    ) + BindingsUI.manage_options + (
+        {'label': 'Test', 'action': 'ZScriptHTML_tryForm'},
+        {'label': 'Proxy', 'action': 'manage_proxyForm'},
+    ) + Historical.manage_options + SimpleItem.manage_options + \
         Cacheable.manage_options
 
     def __init__(self, id):

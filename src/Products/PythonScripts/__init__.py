@@ -33,10 +33,8 @@ def initialize(context):
         constructors=(PythonScript.manage_addPythonScriptForm,
                       PythonScript.manage_addPythonScript),
         icon='www/pyscript.gif'
-        )
+    )
 
-    context.registerHelp()
-    context.registerHelpTitle('Script (Python)')
     global _m
     _m['recompile'] = recompile
     _m['recompile__roles__'] = ('Manager',)
