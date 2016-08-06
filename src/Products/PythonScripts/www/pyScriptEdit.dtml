@@ -100,7 +100,7 @@
   <td align="left" valign="top" colspan="2">
   <div class="form-element">
   <dtml-if wl_isLocked>
-   <em>Locked by WebDAV</em>
+   <em>Locked</em>
   <dtml-else>
    <input class="form-element" type="submit" 
     name="ZPythonScriptHTML_editAction:method" value="Save Changes">
@@ -142,7 +142,7 @@ to <a href="document_src">view or download</a> the current source.
   <td align="left" valign="top">
   <div class="form-element">
   <dtml-if wl_isLocked>
-   <em>Locked by WebDAV</em>
+   <em>Locked</em>
   <dtml-else>
    <input class="form-element" type="submit" value="Upload File">
   </dtml-if>

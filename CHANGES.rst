@@ -1,9 +1,10 @@
 Changelog
 =========
 
-3.0.1 (unreleased)
-------------------
+4.0 (unreleased)
+----------------
 
+- Add compatibility with webdav changes in Zope 4.0a2.
 
 3.0 (2016-07-18)
 ----------------

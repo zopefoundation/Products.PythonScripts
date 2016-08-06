@@ -44,8 +44,12 @@ from RestrictedPython import compile_restricted_function
 from Shared.DC.Scripts.Script import BindingsUI
 from Shared.DC.Scripts.Script import defaultBindings
 from Shared.DC.Scripts.Script import Script
-from webdav.Lockable import ResourceLockedError
 from zExceptions import Forbidden
+
+try:
+    from zExceptions import ResourceLockedError
+except ImportError:
+    from webdav.Lockable import ResourceLockedError
 
 LOG = getLogger('PythonScripts')
 
