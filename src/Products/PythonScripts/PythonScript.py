@@ -466,6 +466,8 @@ class PythonScript(Script, Historical, Cacheable):
                     self.title = v
                 elif k == 'parameters':
                     self._params = v
+                elif k == 'proxy_roles':
+                    self.manage_proxy(v.split(','))
                 elif k[:5] == 'bind ':
                     bindmap[_nice_bind_names[k[5:]]] = v
                     bup = 1
@@ -492,6 +494,7 @@ class PythonScript(Script, Historical, Cacheable):
         m = {
             'title': self.title,
             'parameters': self._params,
+            'proxy_roles': ','.join(self._proxy_roles)
         }
         bindmap = self.getBindingAssignments().getAssignedNames()
         for k, v in _nice_bind_names.items():
