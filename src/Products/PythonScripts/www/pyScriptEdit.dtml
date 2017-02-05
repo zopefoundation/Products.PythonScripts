@@ -47,18 +47,6 @@
   </tr>
 </dtml-if>
 </dtml-with>
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Last Modified
-    </div>
-    </td>
-    <td align="left" valign="top">
-    <div class="form-text">
-    <dtml-var bobobase_modification_time fmt="%Y-%m-%d %H:%M">
-    </div>
-    </td>
-  </tr>
 
 <dtml-if errors>
   <tr>

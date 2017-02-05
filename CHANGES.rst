@@ -4,6 +4,7 @@ Changelog
 4.0.1 (unreleased)
 ------------------
 
+- Remove `bobobase_modification_time` from edit template.
 
 4.0 (2016-08-06)
 ----------------
