@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.0.1 (unreleased)
+4.0.1 (2017-02-06)
 ------------------
 
 - Remove `bobobase_modification_time` from edit template.

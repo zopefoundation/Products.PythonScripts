@@ -14,8 +14,10 @@
 
 from setuptools import setup, find_packages
 
+__version__ = '4.0.1'
+
 setup(name='Products.PythonScripts',
-      version='4.0.1.dev0',
+      version=__version__,
       url='http://pypi.python.org/pypi/Products.PythonScripts',
       license='ZPL 2.1',
       description="Provides support for restricted execution of Python "
