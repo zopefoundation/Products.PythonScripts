@@ -9,3 +9,7 @@ parts
 *.pyo
 *.so
 *.egg-info
+
+.coverage*
+/.python-version
+/.tox/
