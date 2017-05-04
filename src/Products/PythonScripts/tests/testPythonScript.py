@@ -278,8 +278,8 @@ class TestPythonScriptErrors(PythonScriptTestBase):
 
         for defn, name in cases:
             for asn in assigns:
-                f = self._newPS(defn + "\n" + asn % name)
-                self.assertRaises(TypeError, f)
+                func = self._newPS(defn + "\n" + asn % name)
+                self.assertRaises(TypeError, func)
 
 
 class TestPythonScriptGlobals(PythonScriptTestBase, WarningInterceptor):
