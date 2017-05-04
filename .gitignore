@@ -3,6 +3,7 @@ build
 dist
 lib
 parts
+/eggs
 
 *.dll
 *.pyc
