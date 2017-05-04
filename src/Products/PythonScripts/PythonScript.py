@@ -18,19 +18,19 @@ Python code.
 
 from logging import getLogger
 import marshal
-import new
 import os
 import re
 import sys
 import traceback
+import types
 from urllib import quote
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
-from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
+from AccessControl.ZopeGuards import get_safe_globals
+from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_parent
 from App.Common import package_home
 from App.Dialogs import MessageDialog
@@ -242,17 +242,18 @@ class PythonScript(Script, Historical, Cacheable):
         else:
             self._newfun(marshal.loads(self._code))
 
-    def _compiler(self, *args, **kw):
-        return compile_restricted_function(*args, **kw)
-
     def _compile(self):
         bind_names = self.getBindingAssignments().getAssignedNamesInOrder()
-        r = self._compiler(self._params, self._body or 'pass',
-                           self.id, self.meta_type,
-                           globalize=bind_names)
-        code = r[0]
-        errors = r[1]
-        self.warnings = tuple(r[2])
+        compile_result = compile_restricted_function(
+            self._params,
+            body=self._body or 'pass',
+            name=self.id,
+            filename=self.meta_type,
+            globalize=bind_names)
+
+        code = compile_result.code
+        errors = compile_result.errors
+        self.warnings = tuple(compile_result.warnings)
         if errors:
             self._code = None
             self._v_ft = None
@@ -277,9 +278,9 @@ class PythonScript(Script, Historical, Cacheable):
         self._v_change = 0
 
     def _newfun(self, code):
-        g = get_safe_globals()
-        g['_getattr_'] = guarded_getattr
-        g['__debug__'] = __debug__
+        glbs = get_safe_globals()
+        glbs['_getattr_'] = guarded_getattr
+        glbs['__debug__'] = __debug__
         # it doesn't really matter what __name__ is, *but*
         # - we need a __name__
         #   (see testPythonScript.TestPythonScriptGlobals.test__name__)
@@ -287,16 +288,16 @@ class PythonScript(Script, Historical, Cacheable):
         #   (see https://bugs.launchpad.net/zope2/+bug/142731/comments/4)
         # - with Python 2.6 it should not be None
         #   (see testPythonScript.TestPythonScriptGlobals.test_filepath)
-        g['__name__'] = 'script'
+        glbs['__name__'] = 'script'
 
-        l = {}
+        local = {}
         if sys.version_info > (3, 0):
-            exec(code, g, l)
+            exec(code, glbs, local)
         else:
-            exec code in g, l  # NOQA
-        f = l.values()[0]
-        self._v_ft = (f.func_code, g, f.func_defaults or ())
-        return f
+            exec code in glbs, local  # NOQA
+        func = local.values()[0]
+        self._v_ft = (func.func_code, glbs, func.func_defaults or ())
+        return func
 
     def _makeFunction(self):
         self.ZCacheable_invalidate()
@@ -346,7 +347,7 @@ class PythonScript(Script, Historical, Cacheable):
         g['__traceback_supplement__'] = (
             PythonScriptTracebackSupplement, self, -1)
         g['__file__'] = getattr(self, '_filepath', None) or self.get_filepath()
-        f = new.function(fcode, g, None, fadefs)
+        f = types.FunctionType(fcode, g, None, fadefs)
 
         try:
             result = f(*args, **kw)
