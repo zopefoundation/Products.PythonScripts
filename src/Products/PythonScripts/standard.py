@@ -18,26 +18,30 @@ Scripts.  It can be accessed from Python with the statement
 "import Products.PythonScripts.standard"
 """
 
+# Standard Library Imports
 from urllib import urlencode  # NOQA
 
-from AccessControl.SecurityInfo import ModuleSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager
 from App.special_dtml import HTML
-from DocumentTemplate.DT_Var import special_formats    # NOQA
-from DocumentTemplate.DT_Var import whole_dollars    # NOQA
-from DocumentTemplate.DT_Var import dollars_and_cents    # NOQA
-from DocumentTemplate.DT_Var import structured_text    # NOQA
-from DocumentTemplate.DT_Var import sql_quote    # NOQA
-from DocumentTemplate.DT_Var import html_quote    # NOQA
-from DocumentTemplate.DT_Var import url_quote    # NOQA
-from DocumentTemplate.DT_Var import url_quote_plus    # NOQA
-from DocumentTemplate.DT_Var import newline_to_br    # NOQA
-from DocumentTemplate.DT_Var import thousands_commas    # NOQA
-from DocumentTemplate.DT_Var import url_unquote    # NOQA
-from DocumentTemplate.DT_Var import url_unquote_plus    # NOQA
-from DocumentTemplate.DT_Var import restructured_text    # NOQA
+from DocumentTemplate.DT_Var import dollars_and_cents  # NOQA
+from DocumentTemplate.DT_Var import html_quote  # NOQA
+from DocumentTemplate.DT_Var import newline_to_br  # NOQA
+from DocumentTemplate.DT_Var import restructured_text  # NOQA
+from DocumentTemplate.DT_Var import special_formats  # NOQA
+from DocumentTemplate.DT_Var import sql_quote  # NOQA
+from DocumentTemplate.DT_Var import structured_text  # NOQA
+from DocumentTemplate.DT_Var import thousands_commas  # NOQA
+from DocumentTemplate.DT_Var import url_quote  # NOQA
+from DocumentTemplate.DT_Var import url_quote_plus  # NOQA
+from DocumentTemplate.DT_Var import url_unquote  # NOQA
+from DocumentTemplate.DT_Var import url_unquote_plus  # NOQA
+from DocumentTemplate.DT_Var import whole_dollars  # NOQA
 from DocumentTemplate.security import RestrictedDTML
 from ZPublisher.HTTPRequest import record
+
+# AccessControl internal imports
+from AccessControl.SecurityInfo import ModuleSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager
+
 
 security = ModuleSecurityInfo('Products.PythonScripts.standard')
 

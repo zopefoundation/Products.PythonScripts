@@ -10,15 +10,21 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+# Standard Library Imports
 import os
 import unittest
 import warnings
 
+# Zope Imports
+from Products.PythonScripts.PythonScript import PythonScript
+
+# AccessControl internal imports
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
+
+
 #from RestrictedPython.tests.verify import verify
 
-from Products.PythonScripts.PythonScript import PythonScript
 
 
 HERE = os.path.dirname(__file__)

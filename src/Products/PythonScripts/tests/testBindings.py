@@ -12,13 +12,16 @@
 #
 ##############################################################################
 
+# Standard Library Imports
 import unittest
 
+from OFS.Folder import Folder
+from OFS.ObjectManager import ObjectManager
+import transaction
+
+# AccessControl internal imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
-from OFS.ObjectManager import ObjectManager
-from OFS.Folder import Folder
-import transaction
 
 
 class SecurityManager(object):

@@ -9,8 +9,11 @@
  foobarsize = s.foo.bar.restricted_exec('len(context.objectIds())')
 '''
 
-from Products.PythonScripts.PythonScript import PythonScript
+# Standard Library Imports
 from string import join
+
+# Zope Imports
+from Products.PythonScripts.PythonScript import PythonScript
 
 
 def restricted_exec(self, body, varmap=None):

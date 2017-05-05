@@ -15,5 +15,6 @@
 
 # These have been relocated, and should be imported from AccessControl
 
-from AccessControl import allow_module
+# AccessControl internal imports
 from AccessControl import allow_class
+from AccessControl import allow_module
