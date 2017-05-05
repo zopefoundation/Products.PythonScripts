@@ -15,7 +15,6 @@
 # Standard Library Imports
 import unittest
 
-# AccessControl internal imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder

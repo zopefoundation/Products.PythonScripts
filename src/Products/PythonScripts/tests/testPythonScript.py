@@ -16,14 +16,11 @@ import os
 import unittest
 import warnings
 
-# AccessControl internal imports
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 
 # Products.PythonScripts internal imports
 from Products.PythonScripts.PythonScript import PythonScript
-
-
 # from RestrictedPython.tests.verify import verify  # <-- XXX
 
 

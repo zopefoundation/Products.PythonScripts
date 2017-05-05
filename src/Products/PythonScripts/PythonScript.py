@@ -19,8 +19,7 @@ Python code.
 # Standard Library Imports
 from logging import getLogger
 from urllib import quote
-# Track the Python bytecode version
-import imp  # NOQA
+import imp  # Track the Python byte code version
 import os
 import re
 import sys
@@ -28,7 +27,6 @@ import types
 
 import marshal
 
-# AccessControl internal imports
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
 from AccessControl.SecurityInfo import ClassSecurityInfo
