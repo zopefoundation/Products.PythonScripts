@@ -12,7 +12,7 @@
 # Standard Library Imports
 from string import join
 
-# Zope Imports
+# Products.PythonScripts internal imports
 from Products.PythonScripts.PythonScript import PythonScript
 
 

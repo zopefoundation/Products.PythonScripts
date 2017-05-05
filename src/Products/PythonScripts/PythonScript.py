@@ -24,27 +24,9 @@ import imp  # NOQA
 import os
 import re
 import sys
-import traceback
 import types
 
 import marshal
-
-from App.Common import package_home
-from App.Dialogs import MessageDialog
-from App.special_dtml import DTMLFile
-from DateTime.DateTime import DateTime
-from OFS.Cache import Cacheable
-from OFS.History import Historical
-from OFS.History import html_diff
-from OFS.SimpleItem import SimpleItem
-from Shared.DC.Scripts.Script import BindingsUI
-from Shared.DC.Scripts.Script import Script
-from Shared.DC.Scripts.Script import defaultBindings
-from zExceptions import Forbidden
-
-# Zope Imports
-from Acquisition import aq_parent
-from RestrictedPython import compile_restricted_function
 
 # AccessControl internal imports
 from AccessControl.class_init import InitializeClass
@@ -53,6 +35,20 @@ from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import get_safe_globals
 from AccessControl.ZopeGuards import guarded_getattr
+from Acquisition import aq_parent
+from App.Common import package_home
+from App.Dialogs import MessageDialog
+from App.special_dtml import DTMLFile
+from DateTime.DateTime import DateTime
+from OFS.Cache import Cacheable
+from OFS.History import Historical
+from OFS.History import html_diff
+from OFS.SimpleItem import SimpleItem
+from RestrictedPython import compile_restricted_function
+from Shared.DC.Scripts.Script import BindingsUI
+from Shared.DC.Scripts.Script import Script
+from Shared.DC.Scripts.Script import defaultBindings
+from zExceptions import Forbidden
 
 
 try:
@@ -558,6 +554,7 @@ class PythonScript(Script, Historical, Cacheable):
         if RESPONSE is not None:
             RESPONSE.setHeader('Content-Type', 'text/plain')
         return self.read()
+
 
 InitializeClass(PythonScript)
 

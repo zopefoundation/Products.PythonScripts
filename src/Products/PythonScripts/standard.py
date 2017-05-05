@@ -21,6 +21,9 @@ Scripts.  It can be accessed from Python with the statement
 # Standard Library Imports
 from urllib import urlencode  # NOQA
 
+# AccessControl internal imports
+from AccessControl.SecurityInfo import ModuleSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager
 from App.special_dtml import HTML
 from DocumentTemplate.DT_Var import dollars_and_cents  # NOQA
 from DocumentTemplate.DT_Var import html_quote  # NOQA
@@ -37,10 +40,6 @@ from DocumentTemplate.DT_Var import url_unquote_plus  # NOQA
 from DocumentTemplate.DT_Var import whole_dollars  # NOQA
 from DocumentTemplate.security import RestrictedDTML
 from ZPublisher.HTTPRequest import record
-
-# AccessControl internal imports
-from AccessControl.SecurityInfo import ModuleSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager
 
 
 security = ModuleSecurityInfo('Products.PythonScripts.standard')
@@ -111,5 +110,6 @@ class _Object(record):
 
 def Object(**kw):
     return _Object(**kw)
+
 
 security.apply(globals())
