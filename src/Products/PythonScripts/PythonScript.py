@@ -281,9 +281,9 @@ class PythonScript(Script, Historical, Cacheable):
         self._v_change = 0
 
     def _newfun(self, code):
-        glbs = get_safe_globals()
-        glbs['_getattr_'] = guarded_getattr
-        glbs['__debug__'] = __debug__
+        safe_globals = get_safe_globals()
+        safe_globals['_getattr_'] = guarded_getattr
+        safe_globals['__debug__'] = __debug__
         # it doesn't really matter what __name__ is, *but*
         # - we need a __name__
         #   (see testPythonScript.TestPythonScriptGlobals.test__name__)
@@ -291,15 +291,15 @@ class PythonScript(Script, Historical, Cacheable):
         #   (see https://bugs.launchpad.net/zope2/+bug/142731/comments/4)
         # - with Python 2.6 it should not be None
         #   (see testPythonScript.TestPythonScriptGlobals.test_filepath)
-        glbs['__name__'] = 'script'
+        safe_globals['__name__'] = 'script'
 
-        local = {}
+        safe_locals = {}
         if sys.version_info > (3, 0):
-            exec(code, glbs, local)
+            exec(code, safe_globals, safe_locals)
         else:
-            exec code in glbs, local  # NOQA
-        func = local.values()[0]
-        self._v_ft = (func.func_code, glbs, func.func_defaults or ())
+            exec code in safe_globals, safe_locals  # NOQA
+        func = safe_locals.values()[0]
+        self._v_ft = (func.func_code, safe_globals, func.func_defaults or ())
         return func
 
     def _makeFunction(self):
@@ -343,17 +343,17 @@ class PythonScript(Script, Historical, Cacheable):
                 PythonScriptTracebackSupplement, self)
             raise RuntimeError('%s %s has errors.' % (self.meta_type, self.id))
 
-        fcode, g, fadefs = ft
-        g = g.copy()
+        function_code, safe_globals, function_argument_definitions = ft
+        safe_globals = safe_globals.copy()
         if bound_names is not None:
-            g.update(bound_names)
-        g['__traceback_supplement__'] = (
+            safe_globals.update(bound_names)
+        safe_globals['__traceback_supplement__'] = (
             PythonScriptTracebackSupplement, self, -1)
-        g['__file__'] = getattr(self, '_filepath', None) or self.get_filepath()
-        f = types.FunctionType(fcode, g, None, fadefs)
+        safe_globals['__file__'] = getattr(self, '_filepath', None) or self.get_filepath()
+        function = types.FunctionType(function_code, safe_globals, None, function_argument_definitions)
 
         try:
-            result = f(*args, **kw)
+            result = function(*args, **kw)
         except SystemExit:
             raise ValueError(
                 'SystemExit cannot be raised within a PythonScript')
