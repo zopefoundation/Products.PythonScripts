@@ -22,8 +22,8 @@ matrix:
 
 install:
     - pip install -U setuptools==33.1.1 tox coveralls coverage
-    - python bootstrap.py
-    - bin/buildout
+    #- python bootstrap.py
+    #- bin/buildout
 
 script:
     #- coverage run bin/test -v1
