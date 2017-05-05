@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = Products.PythonScripts
+omit =
+
+[report]
+precision = 3
