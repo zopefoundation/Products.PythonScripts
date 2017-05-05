@@ -270,7 +270,7 @@ class TestPythonScriptErrors(PythonScriptTestBase):
 
     def testAttributeAssignment(self):
         # It's illegal to assign to attributes of anything that
-        # doesn't has enabling security declared.
+        # doesn't have enabling security declared.
         # Classes (and their instances) defined by restricted code
         # are an exception -- they are fully readable and writable.
         cases = [("import string", "string"),
