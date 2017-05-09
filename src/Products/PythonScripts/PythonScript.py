@@ -16,14 +16,16 @@ This product provides support for Script objects containing restricted
 Python code.
 """
 
+# Standard Library Imports
 from logging import getLogger
-import marshal
+from urllib import quote
+import imp  # Track the Python byte code version
 import os
 import re
 import sys
-import traceback
 import types
-from urllib import quote
+
+import marshal
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
@@ -42,9 +44,10 @@ from OFS.History import html_diff
 from OFS.SimpleItem import SimpleItem
 from RestrictedPython import compile_restricted_function
 from Shared.DC.Scripts.Script import BindingsUI
-from Shared.DC.Scripts.Script import defaultBindings
 from Shared.DC.Scripts.Script import Script
+from Shared.DC.Scripts.Script import defaultBindings
 from zExceptions import Forbidden
+
 
 try:
     from zExceptions import ResourceLockedError
@@ -53,8 +56,6 @@ except ImportError:
 
 LOG = getLogger('PythonScripts')
 
-# Track the Python bytecode version
-import imp  # NOQA
 Python_magic = imp.get_magic()
 del imp
 
@@ -346,8 +347,13 @@ class PythonScript(Script, Historical, Cacheable):
             safe_globals.update(bound_names)
         safe_globals['__traceback_supplement__'] = (
             PythonScriptTracebackSupplement, self, -1)
-        safe_globals['__file__'] = getattr(self, '_filepath', None) or self.get_filepath()
-        function = types.FunctionType(function_code, safe_globals, None, function_argument_definitions)
+        safe_globals['__file__'] = getattr(self, '_filepath', None) or  \
+            self.get_filepath()
+        function = types.FunctionType(function_code,
+                                      safe_globals,
+                                      None,
+                                      function_argument_definitions
+                                      )
 
         try:
             result = function(*args, **kw)
@@ -551,6 +557,7 @@ class PythonScript(Script, Historical, Cacheable):
         if RESPONSE is not None:
             RESPONSE.setHeader('Content-Type', 'text/plain')
         return self.read()
+
 
 InitializeClass(PythonScript)
 

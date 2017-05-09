@@ -10,15 +10,18 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+
+# Standard Library Imports
 import os
 import unittest
 import warnings
 
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-#from RestrictedPython.tests.verify import verify
 
+# Products.PythonScripts internal imports
 from Products.PythonScripts.PythonScript import PythonScript
+# from RestrictedPython.tests.verify import verify  # <-- XXX
 
 
 HERE = os.path.dirname(__file__)
@@ -59,7 +62,9 @@ def readf(name):
 class VerifiedPythonScript(PythonScript):
 
     def _newfun(self, code):
-        #verify(code)
+        # verify(code)  # <-- not supported anymore from RestrictedPython
+        #               # so this does nothin anymore
+        #               # TODO: Replace VerifiedPythonScript test elem.
         return PythonScript._newfun(self, code)
 
 

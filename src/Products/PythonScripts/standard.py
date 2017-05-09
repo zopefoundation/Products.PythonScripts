@@ -18,26 +18,30 @@ Scripts.  It can be accessed from Python with the statement
 "import Products.PythonScripts.standard"
 """
 
-from urllib import urlencode  # NOQA
+# flake8: NOQA: E401  # BBB
+
+# Standard Library Imports
+from urllib import urlencode
 
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
 from App.special_dtml import HTML
-from DocumentTemplate.DT_Var import special_formats    # NOQA
-from DocumentTemplate.DT_Var import whole_dollars    # NOQA
-from DocumentTemplate.DT_Var import dollars_and_cents    # NOQA
-from DocumentTemplate.DT_Var import structured_text    # NOQA
-from DocumentTemplate.DT_Var import sql_quote    # NOQA
-from DocumentTemplate.DT_Var import html_quote    # NOQA
-from DocumentTemplate.DT_Var import url_quote    # NOQA
-from DocumentTemplate.DT_Var import url_quote_plus    # NOQA
-from DocumentTemplate.DT_Var import newline_to_br    # NOQA
-from DocumentTemplate.DT_Var import thousands_commas    # NOQA
-from DocumentTemplate.DT_Var import url_unquote    # NOQA
-from DocumentTemplate.DT_Var import url_unquote_plus    # NOQA
-from DocumentTemplate.DT_Var import restructured_text    # NOQA
+from DocumentTemplate.DT_Var import dollars_and_cents
+from DocumentTemplate.DT_Var import html_quote
+from DocumentTemplate.DT_Var import newline_to_br
+from DocumentTemplate.DT_Var import restructured_text
+from DocumentTemplate.DT_Var import special_formats
+from DocumentTemplate.DT_Var import sql_quote
+from DocumentTemplate.DT_Var import structured_text
+from DocumentTemplate.DT_Var import thousands_commas
+from DocumentTemplate.DT_Var import url_quote
+from DocumentTemplate.DT_Var import url_quote_plus
+from DocumentTemplate.DT_Var import url_unquote
+from DocumentTemplate.DT_Var import url_unquote_plus
+from DocumentTemplate.DT_Var import whole_dollars
 from DocumentTemplate.security import RestrictedDTML
 from ZPublisher.HTTPRequest import record
+
 
 security = ModuleSecurityInfo('Products.PythonScripts.standard')
 
@@ -107,5 +111,6 @@ class _Object(record):
 
 def Object(**kw):
     return _Object(**kw)
+
 
 security.apply(globals())

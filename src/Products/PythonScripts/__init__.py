@@ -14,6 +14,8 @@
 import PythonScript
 
 from Shared.DC import Scripts
+
+
 __module_aliases__ = (
     ('Products.PythonScripts.Script', Scripts.Script),
     ('Products.PythonScripts.Bindings', Scripts.Bindings),

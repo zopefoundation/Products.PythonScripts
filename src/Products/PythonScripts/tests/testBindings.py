@@ -12,12 +12,13 @@
 #
 ##############################################################################
 
+# Standard Library Imports
 import unittest
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
-from OFS.ObjectManager import ObjectManager
 from OFS.Folder import Folder
+from OFS.ObjectManager import ObjectManager
 import transaction
 
 
@@ -87,12 +88,13 @@ class FauxFolder(Folder):
     security.declareObjectPrivate()
 
     security.declarePrivate('__repr__')
-    def __repr__(self):
+    def __repr__(self):  # NOQA: E301  # pseudo decorator
         return '<FauxFolder: %s>' % self.getId()
 
     security.declarePublic('methodWithRoles')
-    def methodWithRoles(self):
+    def methodWithRoles(self):  # NOQA: E301  # pseudo decorator
         return 'method called'
+
 
 InitializeClass(FauxFolder)
 

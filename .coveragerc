@@ -1,0 +1,10 @@
+[run]
+branch = True
+source = Products.PythonScripts
+omit =
+
+[report]
+precision = 2
+
+[html]
+directory = reports/coverage
