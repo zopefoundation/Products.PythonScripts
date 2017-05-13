@@ -20,10 +20,11 @@ from logging import getLogger
 import marshal
 import os
 import re
+import six
+from six.moves.urllib.parse import quote
 import sys
 import traceback
 import types
-from urllib import quote
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
@@ -270,8 +271,8 @@ class PythonScript(Script, Historical, Cacheable):
         self._code = marshal.dumps(code)
         self.errors = ()
         f = self._newfun(code)
-        fc = f.func_code
-        self._setFuncSignature(f.func_defaults, fc.co_varnames,
+        fc = f.__code__
+        self._setFuncSignature(f.__defaults__, fc.co_varnames,
                                fc.co_argcount)
         self.Python_magic = Python_magic
         self.Script_magic = Script_magic
@@ -291,12 +292,9 @@ class PythonScript(Script, Historical, Cacheable):
         safe_globals['__name__'] = 'script'
 
         safe_locals = {}
-        if sys.version_info > (3, 0):
-            exec(code, safe_globals, safe_locals)
-        else:
-            exec code in safe_globals, safe_locals  # NOQA
-        func = safe_locals.values()[0]
-        self._v_ft = (func.func_code, safe_globals, func.func_defaults or ())
+        six.exec_(code, safe_globals, safe_locals)
+        func = list(safe_locals.values())[0]
+        self._v_ft = (func.__code__, safe_globals, func.__defaults__ or ())
         return func
 
     def _makeFunction(self):
@@ -513,8 +511,7 @@ class PythonScript(Script, Historical, Cacheable):
             prefix = '##'
 
         hlines = ['%s %s "%s"' % (prefix, self.meta_type, self.id)]
-        mm = self._metadata_map().items()
-        mm.sort()
+        mm = sorted(self._metadata_map().items())
         for kv in mm:
             hlines.append('%s=%s' % kv)
         if self.errors:

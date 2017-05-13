@@ -11,7 +11,7 @@
 #
 ##############################################################################
 
-import PythonScript
+from . import PythonScript
 
 from Shared.DC import Scripts
 __module_aliases__ = (
