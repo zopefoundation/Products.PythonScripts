@@ -18,12 +18,13 @@ Python code.
 
 from logging import getLogger
 import marshal
-import new
 import os
 import re
+import six
+from six.moves.urllib.parse import quote
 import sys
 import traceback
-from urllib import quote
+from types import FunctionType
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
@@ -269,8 +270,8 @@ class PythonScript(Script, Historical, Cacheable):
         self._code = marshal.dumps(code)
         self.errors = ()
         f = self._newfun(code)
-        fc = f.func_code
-        self._setFuncSignature(f.func_defaults, fc.co_varnames,
+        fc = f.__code__
+        self._setFuncSignature(f.__defaults__, fc.co_varnames,
                                fc.co_argcount)
         self.Python_magic = Python_magic
         self.Script_magic = Script_magic
@@ -290,12 +291,9 @@ class PythonScript(Script, Historical, Cacheable):
         g['__name__'] = 'script'
 
         l = {}
-        if sys.version_info > (3, 0):
-            exec(code, g, l)
-        else:
-            exec code in g, l  # NOQA
-        f = l.values()[0]
-        self._v_ft = (f.func_code, g, f.func_defaults or ())
+        exec(code, g, l)
+        f = list(l.values())[0]
+        self._v_ft = (f.__code__, g, f.__defaults__ or ())
         return f
 
     def _makeFunction(self):
@@ -346,7 +344,7 @@ class PythonScript(Script, Historical, Cacheable):
         g['__traceback_supplement__'] = (
             PythonScriptTracebackSupplement, self, -1)
         g['__file__'] = getattr(self, '_filepath', None) or self.get_filepath()
-        f = new.function(fcode, g, None, fadefs)
+        f = FunctionType(fcode, g, None, fadefs)
 
         try:
             result = f(*args, **kw)
