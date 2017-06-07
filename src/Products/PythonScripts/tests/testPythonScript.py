@@ -202,7 +202,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testSimplePrint(self):
         res = self._filePS('simple_print')()
-        self.assertEqual(res, 'a 1 []\n')
+        self.assertEqual(res, 'a\n')
 
     def testComplexPrint(self):
         res = self._filePS('complex_print')()
