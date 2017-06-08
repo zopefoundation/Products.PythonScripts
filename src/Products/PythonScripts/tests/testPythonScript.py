@@ -10,6 +10,7 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+import contextlib
 import os
 import six
 import sys
@@ -26,29 +27,15 @@ from Products.PythonScripts.PythonScript import PythonScript
 HERE = os.path.dirname(__file__)
 
 
-class WarningInterceptor(object):
+@contextlib.contextmanager
+def warning_interceptor():
+    old_stderr = sys.stderr
+    sys.stderr = stream = six.StringIO()
+    try:
+        yield stream
+    finally:
+        sys.stderr = old_stderr
 
-    _old_stderr = None
-    _our_stderr_stream = None
-
-    def _trap_warning_output(self):
-
-        if self._old_stderr is not None:
-            return
-
-        import sys
-        from StringIO import StringIO
-
-        self._old_stderr = sys.stderr
-        self._our_stderr_stream = sys.stderr = StringIO()
-
-    def _free_warning_output(self):
-
-        if self._old_stderr is None:
-            return
-
-        import sys
-        sys.stderr = self._old_stderr
 
 # Test Classes
 
@@ -288,13 +275,12 @@ class TestPythonScriptErrors(PythonScriptTestBase):
                 self.assertRaises(TypeError, func)
 
 
-class TestPythonScriptGlobals(PythonScriptTestBase, WarningInterceptor):
+class TestPythonScriptGlobals(PythonScriptTestBase):
 
     def setUp(self):
         PythonScriptTestBase.setUp(self)
 
     def tearDown(self):
-        self._free_warning_output()
         PythonScriptTestBase.tearDown(self)
 
     def _exec(self, script, bound_names=None, args=None, kws=None):
@@ -323,11 +309,9 @@ class TestPythonScriptGlobals(PythonScriptTestBase, WarningInterceptor):
 
         try:
             f = self._filePS('filepath')
-            self._trap_warning_output()
-            f._exec({'container': warnMe}, (), {})
-            self._free_warning_output()
-            warning = self._our_stderr_stream.getvalue()
-            self.failUnless('UserWarning: foo' in warning)
+            with warning_interceptor() as stream:
+                f._exec({'container': warnMe}, (), {})
+                self.failUnless('UserWarning: foo' in stream.getvalue())
         except TypeError as e:
             self.fail(e)
 
