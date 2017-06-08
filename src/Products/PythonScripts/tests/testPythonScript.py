@@ -135,7 +135,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testParam26(self):
         import string
-        params = string.letters[:26]
+        params = string.ascii_letters[:26]
         sparams = ','.join(params)
         ps = self._newPS('##parameters=%s\nreturn %s' % (sparams, sparams))
         res = ps(*params)
@@ -152,11 +152,8 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertEqual(res, 17)
 
     def testImport(self):
-        eq = self.assertEqual
-        a, b, c = self._newPS('import string; return string.split("a b c")')()
-        eq(a, 'a')
-        eq(b, 'b')
-        eq(c, 'c')
+        res = self._newPS('import string; return "7" in string.digits')()
+        self.assertTrue(res)
 
     def testWhileLoop(self):
         res = self._filePS('while_loop')()
