@@ -305,7 +305,12 @@ class TestPythonScriptGlobals(PythonScriptTestBase):
 
     def test__name__(self):
         f = self._filePS('class.__name__')
-        self.assertEqual(f(), ("'script.foo'>", "'string'"))
+        if six.PY3:
+            class_name = "'script.class.__name__.<locals>.foo'>"
+        else:
+            class_name = "'script.foo'>"
+
+        self.assertEqual(f(), (class_name, "'string'"))
 
     def test_filepath(self):
         # This test is meant to raise a deprecation warning.
