@@ -252,7 +252,13 @@ class TestPythonScriptErrors(PythonScriptTestBase):
 
     def testBadImports(self):
         from zExceptions import Unauthorized
-        self.assertPSRaises(Unauthorized, body="from string import *")
+        if six.PY2:
+            self.assertPSRaises(Unauthorized, body="from string import *")
+
+        if six.PY3:
+            with self.assertRaises(SyntaxError):
+                self.assertPSRaises(Unauthorized, body="from string import *")
+
         self.assertPSRaises(Unauthorized, body="from datetime import datetime")
         self.assertPSRaises(Unauthorized, body="import mmap")
 
