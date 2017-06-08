@@ -12,6 +12,7 @@
 ##############################################################################
 import os
 import six
+import sys
 import unittest
 import warnings
 
@@ -203,7 +204,8 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertEqual(res, 'a\n')
 
     def testComplexPrint(self):
-        res = self._filePS('complex_print')()
+        script = 'complex_print_py%s' % sys.version_info.major
+        res = self._filePS(script)()
         self.assertEqual(res, 'double\ndouble\nx: 1\ny: 0 1 2\n\n')
 
     def testNSBind(self):
@@ -219,7 +221,8 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.failUnless(res)
 
     def testGetSize(self):
-        f = self._filePS('complex_print')
+        script = 'complex_print_py%s' % sys.version_info.major
+        f = self._filePS(script)
         self.assertEqual(f.get_size(), len(f.read()))
 
     def testBuiltinSet(self):
