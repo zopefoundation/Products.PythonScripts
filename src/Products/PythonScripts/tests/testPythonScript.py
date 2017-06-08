@@ -16,7 +16,6 @@ import warnings
 
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from RestrictedPython.tests.verify import verify
 
 from Products.PythonScripts.PythonScript import PythonScript
 
@@ -59,7 +58,6 @@ def readf(name):
 class VerifiedPythonScript(PythonScript):
 
     def _newfun(self, code):
-        verify(code)
         return PythonScript._newfun(self, code)
 
 
