@@ -175,7 +175,7 @@ class PythonScript(Script, Historical, Cacheable):
         if self.wl_isLocked():
             raise ResourceLockedError("The script is locked via WebDAV.")
 
-        if not instance(file, str):
+        if not isinstance(file, str):
             if not file:
                 raise ValueError('File not specified')
             file = file.read()
