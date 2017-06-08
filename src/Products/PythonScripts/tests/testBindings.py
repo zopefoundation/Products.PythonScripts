@@ -202,7 +202,10 @@ class TestBindings(unittest.TestCase):
 
         ps = guarded._getOb('container_ps')
         container = ps()
-        self.assertRaises(Unauthorized, container)
+
+        with self.assertRaises(Unauthorized):
+            container()
+
         self.assertRaises(Unauthorized, container.index_html)
         try:
             str(container)
@@ -251,7 +254,12 @@ class TestBindings(unittest.TestCase):
 
         ps = guarded._getOb('context_ps')
         context = ps()
-        self.assertRaises(Unauthorized, context)
+
+        # Without using the contextmanager 'assertRaises' tries to access an
+        # attribute of context, which leads to an error right away.
+        with self.assertRaises(Unauthorized):
+            context()
+
         self.assertRaises(Unauthorized, context.index_html)
         try:
             str(context)
