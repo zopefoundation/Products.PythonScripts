@@ -20,17 +20,14 @@ from logging import getLogger
 import marshal
 import os
 import re
-import six
 from six.moves.urllib.parse import quote
 import sys
-import traceback
 from types import FunctionType
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
 from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
 from Acquisition import aq_parent
 from App.Common import package_home
@@ -175,7 +172,7 @@ class PythonScript(Script, Historical, Cacheable):
         if self.wl_isLocked():
             raise ResourceLockedError("The script is locked via WebDAV.")
 
-        if not instance(file, str):
+        if not isinstance(file, str):
             if not file:
                 raise ValueError('File not specified')
             file = file.read()
@@ -548,6 +545,7 @@ class PythonScript(Script, Historical, Cacheable):
         if RESPONSE is not None:
             RESPONSE.setHeader('Content-Type', 'text/plain')
         return self.read()
+
 
 InitializeClass(PythonScript)
 
