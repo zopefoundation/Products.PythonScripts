@@ -11,6 +11,7 @@
 #
 ##############################################################################
 import os
+import six
 import unittest
 import warnings
 
@@ -224,7 +225,12 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         f = self._filePS('complex_print')
         self.assertEqual(f.get_size(), len(f.read()))
 
-    def testSet(self):
+    def testBuiltinSet(self):
+        res = self._newPS('return len(set([1, 2, 3, 1]))')()
+        self.assertEqual(res, 3)
+
+    @unittest.skipIf(six.PY3, 'sets module does not exist in python3')
+    def testSetModule(self):
         res = self._newPS('from sets import Set; return len(Set([1,2,3]))')()
         self.assertEqual(res, 3)
 
