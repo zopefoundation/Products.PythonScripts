@@ -94,6 +94,7 @@ class FauxFolder(Folder):
     def methodWithRoles(self):
         return 'method called'
 
+
 InitializeClass(FauxFolder)
 
 

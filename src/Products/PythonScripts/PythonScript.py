@@ -20,18 +20,15 @@ from logging import getLogger
 import marshal
 import os
 import re
-import six
 from six.moves.urllib.parse import quote
 import sys
-import traceback
 import types
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.ZopeGuards import get_safe_globals
-from AccessControl.ZopeGuards import guarded_getattr
+from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
 from Acquisition import aq_parent
 from App.Common import package_home
 from App.Dialogs import MessageDialog
@@ -548,6 +545,7 @@ class PythonScript(Script, Historical, Cacheable):
         if RESPONSE is not None:
             RESPONSE.setHeader('Content-Type', 'text/plain')
         return self.read()
+
 
 InitializeClass(PythonScript)
 
