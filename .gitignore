@@ -3,7 +3,8 @@
 *.pyc
 *.pyo
 *.so
-.coverage*
+.coverage
+.coverage.*
 .installed.cfg
 .mr.developer.cfg
 .python-version
@@ -14,5 +15,6 @@ coverage.xml
 develop-eggs/
 dist/
 eggs/
+htmlcov/
 lib/
 parts/
