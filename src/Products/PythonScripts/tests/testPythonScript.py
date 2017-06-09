@@ -55,12 +55,6 @@ def readf(name):
     return open(path, 'r').read()
 
 
-class VerifiedPythonScript(PythonScript):
-
-    def _newfun(self, code):
-        return PythonScript._newfun(self, code)
-
-
 class PythonScriptTestBase(unittest.TestCase):
 
     def setUp(self):
@@ -83,7 +77,7 @@ class PythonScriptTestBase(unittest.TestCase):
         _appliedModuleSecurity.update(self._ams_before)
 
     def _newPS(self, txt, bind=None):
-        ps = VerifiedPythonScript('ps')
+        ps = PythonScript('ps')
         ps.ZBindings_edit(bind or {})
         ps.write(txt)
         ps._makeFunction()
@@ -92,7 +86,7 @@ class PythonScriptTestBase(unittest.TestCase):
         return ps
 
     def _filePS(self, fname, bind=None):
-        ps = VerifiedPythonScript(fname)
+        ps = PythonScript(fname)
         ps.ZBindings_edit(bind or {})
         ps.write(readf(fname))
         ps._makeFunction()
