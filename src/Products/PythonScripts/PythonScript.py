@@ -17,10 +17,11 @@ Python code.
 """
 
 from logging import getLogger
+from six.moves.urllib.parse import quote
 import marshal
 import os
 import re
-from six.moves.urllib.parse import quote
+import six
 import sys
 import types
 
@@ -341,8 +342,10 @@ class PythonScript(Script, Historical, Cacheable):
             safe_globals.update(bound_names)
         safe_globals['__traceback_supplement__'] = (
             PythonScriptTracebackSupplement, self, -1)
-        safe_globals['__file__'] = getattr(self, '_filepath', None) or self.get_filepath()
-        function = types.FunctionType(function_code, safe_globals, None, function_argument_definitions)
+        safe_globals['__file__'] = getattr(
+            self, '_filepath', None) or self.get_filepath()
+        function = types.FunctionType(
+            function_code, safe_globals, None, function_argument_definitions)
 
         try:
             result = function(*args, **kw)
