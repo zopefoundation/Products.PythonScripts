@@ -14,14 +14,14 @@
 
 from setuptools import setup, find_packages
 
-__version__ = '4.0.2.dev0'
+__version__ = '4.1.dev0'
 
 setup(name='Products.PythonScripts',
       version=__version__,
-      url='http://pypi.python.org/pypi/Products.PythonScripts',
+      url='https://github.com/zopefoundation/Products.PythonScripts',
       license='ZPL 2.1',
       description="Provides support for restricted execution of Python "
-                  "scripts in Zope 2.",
+                  "scripts in Zope 4.",
       author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
       long_description=(open('README.rst').read() + '\n' +
@@ -36,8 +36,12 @@ setup(name='Products.PythonScripts',
           "License :: OSI Approved :: Zope Public License",
           "Operating System :: OS Independent",
           "Programming Language :: Python",
-          "Programming Language :: Python :: 2 :: Only",
+          "Programming Language :: Python :: 2",
           "Programming Language :: Python :: 2.7",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.4",
+          "Programming Language :: Python :: 3.5",
+          "Programming Language :: Python :: 3.6",
           "Programming Language :: Python :: Implementation :: CPython",
       ],
       install_requires=[
