@@ -17,12 +17,13 @@ Python code.
 """
 
 from logging import getLogger
+from six.moves.urllib.parse import quote
 import marshal
 import os
 import re
-from six.moves.urllib.parse import quote
+import six
 import sys
-from types import FunctionType
+import types
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
@@ -240,17 +241,18 @@ class PythonScript(Script, Historical, Cacheable):
         else:
             self._newfun(marshal.loads(self._code))
 
-    def _compiler(self, *args, **kw):
-        return compile_restricted_function(*args, **kw)
-
     def _compile(self):
         bind_names = self.getBindingAssignments().getAssignedNamesInOrder()
-        r = self._compiler(self._params, self._body or 'pass',
-                           self.id, self.meta_type,
-                           globalize=bind_names)
-        code = r[0]
-        errors = r[1]
-        self.warnings = tuple(r[2])
+        compile_result = compile_restricted_function(
+            self._params,
+            body=self._body or 'pass',
+            name=self.id,
+            filename=self.meta_type,
+            globalize=bind_names)
+
+        code = compile_result.code
+        errors = compile_result.errors
+        self.warnings = tuple(compile_result.warnings)
         if errors:
             self._code = None
             self._v_ft = None
@@ -275,9 +277,9 @@ class PythonScript(Script, Historical, Cacheable):
         self._v_change = 0
 
     def _newfun(self, code):
-        g = get_safe_globals()
-        g['_getattr_'] = guarded_getattr
-        g['__debug__'] = __debug__
+        safe_globals = get_safe_globals()
+        safe_globals['_getattr_'] = guarded_getattr
+        safe_globals['__debug__'] = __debug__
         # it doesn't really matter what __name__ is, *but*
         # - we need a __name__
         #   (see testPythonScript.TestPythonScriptGlobals.test__name__)
@@ -285,13 +287,13 @@ class PythonScript(Script, Historical, Cacheable):
         #   (see https://bugs.launchpad.net/zope2/+bug/142731/comments/4)
         # - with Python 2.6 it should not be None
         #   (see testPythonScript.TestPythonScriptGlobals.test_filepath)
-        g['__name__'] = 'script'
+        safe_globals['__name__'] = 'script'
 
-        l = {}
-        exec(code, g, l)
-        f = list(l.values())[0]
-        self._v_ft = (f.__code__, g, f.__defaults__ or ())
-        return f
+        safe_locals = {}
+        six.exec_(code, safe_globals, safe_locals)
+        func = list(safe_locals.values())[0]
+        self._v_ft = (func.__code__, safe_globals, func.__defaults__ or ())
+        return func
 
     def _makeFunction(self):
         self.ZCacheable_invalidate()
@@ -334,17 +336,19 @@ class PythonScript(Script, Historical, Cacheable):
                 PythonScriptTracebackSupplement, self)
             raise RuntimeError('%s %s has errors.' % (self.meta_type, self.id))
 
-        fcode, g, fadefs = ft
-        g = g.copy()
+        function_code, safe_globals, function_argument_definitions = ft
+        safe_globals = safe_globals.copy()
         if bound_names is not None:
-            g.update(bound_names)
-        g['__traceback_supplement__'] = (
+            safe_globals.update(bound_names)
+        safe_globals['__traceback_supplement__'] = (
             PythonScriptTracebackSupplement, self, -1)
-        g['__file__'] = getattr(self, '_filepath', None) or self.get_filepath()
-        f = FunctionType(fcode, g, None, fadefs)
+        safe_globals['__file__'] = getattr(
+            self, '_filepath', None) or self.get_filepath()
+        function = types.FunctionType(
+            function_code, safe_globals, None, function_argument_definitions)
 
         try:
-            result = f(*args, **kw)
+            result = function(*args, **kw)
         except SystemExit:
             raise ValueError(
                 'SystemExit cannot be raised within a PythonScript')
@@ -507,8 +511,7 @@ class PythonScript(Script, Historical, Cacheable):
             prefix = '##'
 
         hlines = ['%s %s "%s"' % (prefix, self.meta_type, self.id)]
-        mm = self._metadata_map().items()
-        mm.sort()
+        mm = sorted(self._metadata_map().items())
         for kv in mm:
             hlines.append('%s=%s' % kv)
         if self.errors:

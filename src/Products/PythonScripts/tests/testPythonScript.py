@@ -10,7 +10,10 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+import contextlib
 import os
+import six
+import sys
 import unittest
 import warnings
 
@@ -23,29 +26,15 @@ from Products.PythonScripts.PythonScript import PythonScript
 HERE = os.path.dirname(__file__)
 
 
-class WarningInterceptor(object):
+@contextlib.contextmanager
+def warning_interceptor():
+    old_stderr = sys.stderr
+    sys.stderr = stream = six.StringIO()
+    try:
+        yield stream
+    finally:
+        sys.stderr = old_stderr
 
-    _old_stderr = None
-    _our_stderr_stream = None
-
-    def _trap_warning_output(self):
-
-        if self._old_stderr is not None:
-            return
-
-        import sys
-        from StringIO import StringIO
-
-        self._old_stderr = sys.stderr
-        self._our_stderr_stream = sys.stderr = StringIO()
-
-    def _free_warning_output(self):
-
-        if self._old_stderr is None:
-            return
-
-        import sys
-        sys.stderr = self._old_stderr
 
 # Test Classes
 
@@ -126,7 +115,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testParam26(self):
         import string
-        params = string.letters[:26]
+        params = string.ascii_letters[:26]
         sparams = ','.join(params)
         ps = self._newPS('##parameters=%s\nreturn %s' % (sparams, sparams))
         res = ps(*params)
@@ -143,11 +132,8 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertEqual(res, 17)
 
     def testImport(self):
-        eq = self.assertEqual
-        a, b, c = self._newPS('import string; return string.split("a b c")')()
-        eq(a, 'a')
-        eq(b, 'b')
-        eq(c, 'c')
+        res = self._newPS('import string; return "7" in string.digits')()
+        self.assertTrue(res)
 
     def testWhileLoop(self):
         res = self._filePS('while_loop')()
@@ -194,10 +180,11 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testSimplePrint(self):
         res = self._filePS('simple_print')()
-        self.assertEqual(res, 'a 1 []\n')
+        self.assertEqual(res, 'a\n')
 
     def testComplexPrint(self):
-        res = self._filePS('complex_print')()
+        script = 'complex_print_py%s' % sys.version_info.major
+        res = self._filePS(script)()
         self.assertEqual(res, 'double\ndouble\nx: 1\ny: 0 1 2\n\n')
 
     def testNSBind(self):
@@ -213,10 +200,16 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.failUnless(res)
 
     def testGetSize(self):
-        f = self._filePS('complex_print')
+        script = 'complex_print_py%s' % sys.version_info.major
+        f = self._filePS(script)
         self.assertEqual(f.get_size(), len(f.read()))
 
-    def testSet(self):
+    def testBuiltinSet(self):
+        res = self._newPS('return len(set([1, 2, 3, 1]))')()
+        self.assertEqual(res, 3)
+
+    @unittest.skipIf(six.PY3, 'sets module does not exist in python3')
+    def testSetModule(self):
         res = self._newPS('from sets import Set; return len(Set([1,2,3]))')()
         self.assertEqual(res, 3)
 
@@ -251,13 +244,19 @@ class TestPythonScriptErrors(PythonScriptTestBase):
 
     def testBadImports(self):
         from zExceptions import Unauthorized
-        self.assertPSRaises(Unauthorized, body="from string import *")
+        if six.PY2:
+            self.assertPSRaises(Unauthorized, body="from string import *")
+
+        if six.PY3:
+            with self.assertRaises(SyntaxError):
+                self.assertPSRaises(Unauthorized, body="from string import *")
+
         self.assertPSRaises(Unauthorized, body="from datetime import datetime")
         self.assertPSRaises(Unauthorized, body="import mmap")
 
     def testAttributeAssignment(self):
         # It's illegal to assign to attributes of anything that
-        # doesn't has enabling security declared.
+        # doesn't have enabling security declared.
         # Classes (and their instances) defined by restricted code
         # are an exception -- they are fully readable and writable.
         cases = [("import string", "string"),
@@ -270,17 +269,16 @@ class TestPythonScriptErrors(PythonScriptTestBase):
 
         for defn, name in cases:
             for asn in assigns:
-                f = self._newPS(defn + "\n" + asn % name)
-                self.assertRaises(TypeError, f)
+                func = self._newPS(defn + "\n" + asn % name)
+                self.assertRaises(TypeError, func)
 
 
-class TestPythonScriptGlobals(PythonScriptTestBase, WarningInterceptor):
+class TestPythonScriptGlobals(PythonScriptTestBase):
 
     def setUp(self):
         PythonScriptTestBase.setUp(self)
 
     def tearDown(self):
-        self._free_warning_output()
         PythonScriptTestBase.tearDown(self)
 
     def _exec(self, script, bound_names=None, args=None, kws=None):
@@ -299,7 +297,12 @@ class TestPythonScriptGlobals(PythonScriptTestBase, WarningInterceptor):
 
     def test__name__(self):
         f = self._filePS('class.__name__')
-        self.assertEqual(f(), ("'script.foo'>", "'string'"))
+        if six.PY3:
+            class_name = "'script.class.__name__.<locals>.foo'>"
+        else:
+            class_name = "'script.foo'>"
+
+        self.assertEqual(f(), (class_name, "'string'"))
 
     def test_filepath(self):
         # This test is meant to raise a deprecation warning.
@@ -309,11 +312,9 @@ class TestPythonScriptGlobals(PythonScriptTestBase, WarningInterceptor):
 
         try:
             f = self._filePS('filepath')
-            self._trap_warning_output()
-            f._exec({'container': warnMe}, (), {})
-            self._free_warning_output()
-            warning = self._our_stderr_stream.getvalue()
-            self.failUnless('UserWarning: foo' in warning)
+            with warning_interceptor() as stream:
+                f._exec({'container': warnMe}, (), {})
+                self.failUnless('UserWarning: foo' in stream.getvalue())
         except TypeError as e:
             self.fail(e)
 

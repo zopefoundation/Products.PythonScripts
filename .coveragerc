@@ -1,0 +1,6 @@
+[run]
+branch = True
+source = Products.PythonScripts
+
+[report]
+precision = 2
