@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.1 (unreleased)
+4.1 (2017-06-19)
 ----------------
 
 - Add support for Python 3.4 up to 3.6.
