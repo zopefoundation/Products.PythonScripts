@@ -19,7 +19,7 @@ Changelog
 
 .. warning::
 
-    This version needs Zope 4 to run!
+    This version needs Zope2 >= 4.0 to run!
 
 3.0 (2016-07-18)
 ----------------
