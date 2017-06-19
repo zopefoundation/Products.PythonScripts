@@ -17,7 +17,9 @@ Changelog
 
 - Add compatibility with webdav changes in Zope 4.0a2.
 
-- Caution: This version needs Zope 4 to run!
+.. warning::
+
+    This version needs Zope 4 to run!
 
 3.0 (2016-07-18)
 ----------------
