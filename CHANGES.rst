@@ -1,8 +1,10 @@
 Changelog
 =========
 
-4.0.2 (unreleased)
-------------------
+4.1 (unreleased)
+----------------
+
+- Add support for Python 3.4 up to 3.6.
 
 
 4.0.1 (2017-02-06)
@@ -14,6 +16,10 @@ Changelog
 ----------------
 
 - Add compatibility with webdav changes in Zope 4.0a2.
+
+.. warning::
+
+    This version needs Zope 4 to run!
 
 3.0 (2016-07-18)
 ----------------
