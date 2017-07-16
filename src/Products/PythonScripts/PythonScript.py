@@ -67,8 +67,11 @@ _log_complaint = (
     ' of your server in a browser.')
 
 manage_addPythonScriptForm = DTMLFile('www/pyScriptAdd', globals())
-_default_file = os.path.join(package_home(globals()),
-                             'www', 'default_py')
+
+if six.PY3:
+    _default_file = os.path.join(package_home(globals()), 'www', 'default_py3')
+else:
+    _default_file = os.path.join(package_home(globals()), 'www', 'default_py2')
 
 _marker = []  # Create a new marker object
 
