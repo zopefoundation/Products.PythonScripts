@@ -11,6 +11,8 @@
 #
 ##############################################################################
 
+# To register helper functions at AccessControl.
+from . import standard
 from . import PythonScript
 
 from Shared.DC import Scripts
