@@ -58,7 +58,7 @@ Python_magic = imp.get_magic()
 del imp
 
 # This should only be incremented to force recompilation.
-Script_magic = 3
+Script_magic = 4
 _log_complaint = (
     'Some of your Scripts have stale code cached.  Since Zope cannot'
     ' use this code, startup will be slightly slower until these Scripts'

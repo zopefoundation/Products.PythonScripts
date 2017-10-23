@@ -1,10 +1,11 @@
 Changelog
 =========
 
-4.2 (unreleased)
-----------------
+4.1.1 (unreleased)
+------------------
 
-- Nothing changed yet.
+- Force recompilation of scripts as the compiled code is now stored
+  on `__code__` instead of `func_code`.
 
 
 4.1 (2017-06-19)
