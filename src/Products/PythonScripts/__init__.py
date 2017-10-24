@@ -11,8 +11,9 @@
 #
 ##############################################################################
 
-# To register helper functions at AccessControl.
-from . import standard
+# To register helper functions at AccessControl and security declaration in the
+# module itself:
+from . import standard  # noqa
 from . import PythonScript
 
 from Shared.DC import Scripts
