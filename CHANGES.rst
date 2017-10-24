@@ -7,6 +7,12 @@ Changelog
 - Force recompilation of scripts as the compiled code is now stored
   on `__code__` instead of `func_code`.
 
+- Add a Python 3 compatible default script.
+  https://github.com/zopefoundation/Products.PythonScripts/pull/10
+
+- Fix security declaration for ``Products.PythonScripts.standard`` which was
+  broken since version 3.0.
+  https://github.com/zopefoundation/Zope/issues/209
 
 4.1 (2017-06-19)
 ----------------
