@@ -414,8 +414,10 @@ class PythonScript(Script, Historical, Cacheable):
     security.declareProtected(
         'Change Python Scripts',
         'PUT', 'manage_FTPput', 'write',
-        'manage_historyCopy',
-        'manage_beforeHistoryCopy', 'manage_afterHistoryCopy')
+        #'manage_historyCopy',
+        #'manage_beforeHistoryCopy',
+        #'manage_afterHistoryCopy',
+    )
 
     def PUT(self, REQUEST, RESPONSE):
         """ Handle HTTP PUT requests """
