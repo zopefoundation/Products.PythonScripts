@@ -18,6 +18,6 @@ after_success:
     - coverage combine
     - coveralls
 cache:
-  pip: true
-  directories:
+  - pip: true
+  - directories:
     - eggs/
