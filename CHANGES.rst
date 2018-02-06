@@ -20,6 +20,8 @@ Changelog
   version.
   (`#17 <https://github.com/zopefoundation/Products.PythonScripts/pull/17>`_)
 
+- Add icon for Bootstrap ZMI.
+
 4.1 (2017-06-19)
 ----------------
 
