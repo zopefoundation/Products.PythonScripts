@@ -106,7 +106,7 @@ class PythonScript(Script, Historical, Cacheable):
     """
 
     meta_type = 'Script (Python)'
-    zmi_icon = 'zmi-icon-python'
+    zmi_icon = 'fab fa-python'
     _proxy_roles = ()
 
     _params = _body = ''
