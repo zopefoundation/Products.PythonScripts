@@ -92,7 +92,7 @@ def manage_addPythonScript(self, id, REQUEST=None, submit=None):
             u = self.DestinationURL()
         except Exception:
             u = REQUEST['URL1']
-        if submit == " Add and Edit ":
+        if submit == "Add and Edit":
             u = "%s/%s" % (u, quote(id))
         REQUEST.RESPONSE.redirect(u + '/manage_main')
     return ''
@@ -106,7 +106,7 @@ class PythonScript(Script, Historical, Cacheable):
     """
 
     meta_type = 'Script (Python)'
-    zmi_icon = 'fab fa-python'
+    zmi_icon = 'fa fa-terminal'
     _proxy_roles = ()
 
     _params = _body = ''
