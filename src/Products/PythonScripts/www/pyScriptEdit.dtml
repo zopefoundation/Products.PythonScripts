@@ -44,7 +44,8 @@
 		</dtml-if>
 	
 		<dtml-with keyword_args mapping>
-			<textarea id="content" data-content_type="python" class="form-control zmi-zpt zmi-code col-sm-12"
+			<textarea id="content" data-contenttype="python" 
+				class="form-control zmi-zpt zmi-code col-sm-12"
 				name="body:text" wrap="off" rows="20">&dtml-body;</textarea>
 		</dtml-with>
 
