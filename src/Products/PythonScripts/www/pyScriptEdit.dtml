@@ -44,7 +44,7 @@
 		</dtml-if>
 	
 		<dtml-with keyword_args mapping>
-			<textarea id="content" class="form-control zmi-zpt zmi-code col-sm-12"
+			<textarea id="content" data-content_type="python" class="form-control zmi-zpt zmi-code col-sm-12"
 				name="body:text" wrap="off" rows="20">&dtml-body;</textarea>
 		</dtml-with>
 
@@ -64,11 +64,11 @@
 		<form action="ZPythonScriptHTML_upload" method="post" enctype="multipart/form-data" class="zmi-upload mt-4">
 
 			<p class="form-help">
-				You may upload the source for &dtml-title_and_id; using the form below.
+				You may upload the source for <em>&dtml-title_and_id;</em> using the form below.
 				Choose an existing file from your local computer by clicking <em>browse</em>
 				The contents of the file should be a valid script with an optional
-				&quot;##data&quot; block at the start. You may click the following link
-				to <a href="document_src">view or download</a> the current source.
+				<code>##data</code> block at the start. You may click the following link
+				to <a href="document_src" target="_blank">view or download</a> the current source.
 			</p>
 
 			<div class="input-group" title="Select Local File for Uploading">
