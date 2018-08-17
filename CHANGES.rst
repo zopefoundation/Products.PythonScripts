@@ -21,6 +21,7 @@ Changelog
   (`#17 <https://github.com/zopefoundation/Products.PythonScripts/pull/17>`_)
 
 - Update HTML code of ZMI for Bootstrap ZMI.
+  (`#16 <https://github.com/zopefoundation/Products.PythonScripts/pull/16>`_)
 
 
 4.1 (2017-06-19)
