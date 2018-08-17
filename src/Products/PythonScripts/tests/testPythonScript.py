@@ -41,7 +41,8 @@ def warning_interceptor():
 
 def readf(name):
     path = os.path.join(HERE, 'tscripts', '%s.ps' % name)
-    return open(path, 'r').read()
+    with open(path, 'r') as f:
+        return f.read()
 
 
 class PythonScriptTestBase(unittest.TestCase):
@@ -88,7 +89,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testEmpty(self):
         empty = self._newPS('')()
-        self.failUnless(empty is None)
+        self.assertIsNone(empty)
 
     def testIndented(self):
         # This failed to compile in Zope 2.4.0b2.
@@ -101,7 +102,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testReturnNone(self):
         res = self._newPS('return')()
-        self.failUnless(res is None)
+        self.assertIsNone(res)
 
     def testParam1(self):
         res = self._newPS('##parameters=x\nreturn x')('txt')
@@ -167,7 +168,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testBigBoolean(self):
         res = self._filePS('big_boolean')()
-        self.failUnless(res)
+        self.assertTrue(res)
 
     def testFibonacci(self):
         res = self._filePS('fibonacci')()
@@ -197,7 +198,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
 
     def testBooleanMap(self):
         res = self._filePS('boolean_map')()
-        self.failUnless(res)
+        self.assertTrue(res)
 
     def testGetSize(self):
         script = 'complex_print_py%s' % sys.version_info.major
@@ -314,7 +315,7 @@ class TestPythonScriptGlobals(PythonScriptTestBase):
             f = self._filePS('filepath')
             with warning_interceptor() as stream:
                 f._exec({'container': warnMe}, (), {})
-                self.failUnless('UserWarning: foo' in stream.getvalue())
+                self.assertIn('UserWarning: foo', stream.getvalue())
         except TypeError as e:
             self.fail(e)
 
