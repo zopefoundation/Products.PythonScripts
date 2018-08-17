@@ -5,10 +5,10 @@ python:
     - 3.5
     - 3.6
 install:
-    - pip install -U six==$(curl $(awk '$1 ==  "extends" {print $3}' buildout.cfg) 2>/dev/null | awk '$1 == "six" {print $3}')
     - pip install coverage coveralls
-    - python bootstrap.py
-    - bin/buildout
+    - pip install zc.buildout
+    - buildout bootstrap
+    - buildout install test
 script:
     - coverage run bin/test --all -v1
 notifications:

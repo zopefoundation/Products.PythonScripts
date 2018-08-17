@@ -16,6 +16,9 @@ Changelog
 
 - Drop support for Python 3.4.
 
+- Update the tests to `RestrictedPython >= 4.0b4`, thus requiring at lest this
+  version.
+  (`#17 <https://github.com/zopefoundation/Products.PythonScripts/pull/17>`_)
 
 4.1 (2017-06-19)
 ----------------
