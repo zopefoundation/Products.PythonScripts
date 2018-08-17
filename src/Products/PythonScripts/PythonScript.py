@@ -481,7 +481,7 @@ class PythonScript(Script, Historical, Cacheable):
                 self.ZBindings_edit(bindmap)
             else:
                 self._makeFunction()
-        except:
+        except Exception:
             LOG.error('write failed', exc_info=sys.exc_info())
             raise
 
