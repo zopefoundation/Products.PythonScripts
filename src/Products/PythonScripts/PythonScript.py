@@ -130,12 +130,12 @@ class PythonScript(Script, Historical, Cacheable):
 
     security.declareObjectProtected('View')
     security.declareProtected('View', '__call__')
-
+    security.declarePublic('params')
     security.declareProtected(
         'View management screens',
         'ZPythonScriptHTML_editForm', 'manage_main', 'read',
         'ZScriptHTML_tryForm', 'PrincipiaSearchSource',
-        'document_src', 'params', 'body', 'get_filepath')
+        'document_src', 'body', 'get_filepath')
 
     ZPythonScriptHTML_editForm = DTMLFile('www/pyScriptEdit', globals())
     manage = manage_main = ZPythonScriptHTML_editForm

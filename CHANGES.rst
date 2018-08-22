@@ -14,6 +14,9 @@ Changelog
   broken since version 3.0.
   https://github.com/zopefoundation/Zope/issues/209
 
+- Allow protected access to the ``params`` of a PythonScript.
+  (`#15 <https://github.com/zopefoundation/Products.PythonScripts/pull/15>`_)
+
 - Drop support for Python 3.4.
 
 - Update the tests to `RestrictedPython >= 4.0b4`, thus requiring at lest this
