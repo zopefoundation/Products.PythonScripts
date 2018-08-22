@@ -1,8 +1,8 @@
 Changelog
 =========
 
-4.1.1 (unreleased)
-------------------
+4.2 (unreleased)
+----------------
 
 - Force recompilation of scripts as the compiled code is now stored
   on `__code__` instead of `func_code`.
@@ -16,6 +16,15 @@ Changelog
 
 - Allow protected access to the ``params`` of a PythonScript.
   (`#15 <https://github.com/zopefoundation/Products.PythonScripts/pull/15>`_)
+
+- Drop support for Python 3.4.
+
+- Update the tests to `RestrictedPython >= 4.0b4`, thus requiring at lest this
+  version.
+  (`#17 <https://github.com/zopefoundation/Products.PythonScripts/pull/17>`_)
+
+- Update HTML code of ZMI for Bootstrap ZMI.
+  (`#16 <https://github.com/zopefoundation/Products.PythonScripts/pull/16>`_)
 
 
 4.1 (2017-06-19)

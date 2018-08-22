@@ -92,7 +92,7 @@ def manage_addPythonScript(self, id, REQUEST=None, submit=None):
             u = self.DestinationURL()
         except Exception:
             u = REQUEST['URL1']
-        if submit == " Add and Edit ":
+        if submit == "Add and Edit":
             u = "%s/%s" % (u, quote(id))
         REQUEST.RESPONSE.redirect(u + '/manage_main')
     return ''
@@ -106,6 +106,7 @@ class PythonScript(Script, Historical, Cacheable):
     """
 
     meta_type = 'Script (Python)'
+    zmi_icon = 'fa fa-terminal'
     _proxy_roles = ()
 
     _params = _body = ''
@@ -144,7 +145,7 @@ class PythonScript(Script, Historical, Cacheable):
         'Change Python Scripts',
         'ZPythonScriptHTML_editAction',
         'ZPythonScript_setTitle', 'ZPythonScript_edit',
-        'ZPythonScriptHTML_upload', 'ZPythonScriptHTML_changePrefs')
+        'ZPythonScriptHTML_upload', )
 
     def ZPythonScriptHTML_editAction(self, REQUEST, title, params, body):
         """Change the script's main parameters."""
@@ -185,29 +186,6 @@ class PythonScript(Script, Historical, Cacheable):
         message = 'Saved changes.'
         return self.ZPythonScriptHTML_editForm(self, REQUEST,
                                                manage_tabs_message=message)
-
-    def ZPythonScriptHTML_changePrefs(self, REQUEST, height=None, width=None,
-                                      dtpref_cols="100%", dtpref_rows="20"):
-        """Change editing preferences."""
-        dr = {"Taller": 5, "Shorter": -5}.get(height, 0)
-        dc = {"Wider": 5, "Narrower": -5}.get(width, 0)
-        if isinstance(height, int):
-            dtpref_rows = height
-        if (isinstance(width, int) or
-                isinstance(width, str) and width.endswith('%')):
-            dtpref_cols = width
-        rows = str(max(1, int(dtpref_rows) + dr))
-        cols = str(dtpref_cols)
-        if cols.endswith('%'):
-            cols = str(min(100, max(25, int(cols[:-1]) + dc))) + '%'
-        else:
-            cols = str(max(35, int(cols) + dc))
-        e = (DateTime("GMT") + 365).rfc822()
-        setCookie = REQUEST["RESPONSE"].setCookie
-        setCookie("dtpref_rows", rows, path='/', expires=e)
-        setCookie("dtpref_cols", cols, path='/', expires=e)
-        REQUEST.other.update({"dtpref_cols": cols, "dtpref_rows": rows})
-        return self.manage_main(self, REQUEST)
 
     def ZScriptHTML_tryParams(self):
         """Parameters to test the script with."""
@@ -481,7 +459,7 @@ class PythonScript(Script, Historical, Cacheable):
                 self.ZBindings_edit(bindmap)
             else:
                 self._makeFunction()
-        except:
+        except Exception:
             LOG.error('write failed', exc_info=sys.exc_info())
             raise
 

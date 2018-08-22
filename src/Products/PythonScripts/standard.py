@@ -96,7 +96,7 @@ class _Object(record):
             # Ignore invalid keys, rather than raising an exception.
             try:
                 skey = str(key)
-            except:
+            except Exception:
                 continue
             if skey == key and not skey.startswith('_'):
                 self.__dict__[skey] = d[key]
