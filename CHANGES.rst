@@ -14,6 +14,10 @@ Changelog
   broken since version 3.0.
   https://github.com/zopefoundation/Zope/issues/209
 
+- Allow protected access to the ``params`` of a PythonScript.
+  (`#15 <https://github.com/zopefoundation/Products.PythonScripts/pull/15>`_)
+
+
 4.1 (2017-06-19)
 ----------------
 
