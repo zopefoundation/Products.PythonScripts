@@ -16,6 +16,11 @@ Changelog
 
 - Drop support for Python 3.4.
 
+- Fix HTTP-500 error which occurred when entering code containing a
+  syntax error in a PythonScript. It is now rendered as error message like
+  other errors.
+  (`#11 <https://github.com/zopefoundation/Products.PythonScripts/issues/11>`_)
+
 - Update the tests to `RestrictedPython >= 4.0b4`, thus requiring at lest this
   version.
   (`#17 <https://github.com/zopefoundation/Products.PythonScripts/pull/17>`_)
