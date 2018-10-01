@@ -54,4 +54,9 @@ setup(name='Products.PythonScripts',
       ],
       include_package_data=True,
       zip_safe=False,
+      entry_points={
+        'zodbupdate.decode': [
+            'decodes = Products.PythonScripts:zodbupdate_decode_dict',
+        ],
+      },
       )
