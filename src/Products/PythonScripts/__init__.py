@@ -25,6 +25,10 @@ __module_aliases__ = (
 __roles__ = None
 __allow_access_to_unprotected_subobjects__ = 1
 
+zodbupdate_decode_dict = {
+    'Products.PythonScripts.PythonScript PythonScript Python_magic': 'binary',
+    'Products.PythonScripts.PythonScript PythonScript _code': 'binary',
+}
 
 def initialize(context):
     context.registerClass(
