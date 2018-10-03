@@ -30,6 +30,7 @@ zodbupdate_decode_dict = {
     'Products.PythonScripts.PythonScript PythonScript _code': 'binary',
 }
 
+
 def initialize(context):
     context.registerClass(
         PythonScript.PythonScript,

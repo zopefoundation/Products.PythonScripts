@@ -34,7 +34,6 @@ from Acquisition import aq_parent
 from App.Common import package_home
 from App.Dialogs import MessageDialog
 from App.special_dtml import DTMLFile
-from DateTime.DateTime import DateTime
 from OFS.Cache import Cacheable
 from OFS.History import Historical
 from OFS.History import html_diff
