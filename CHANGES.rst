@@ -28,6 +28,8 @@ Changelog
 - Update HTML code of ZMI for Bootstrap ZMI.
   (`#16 <https://github.com/zopefoundation/Products.PythonScripts/pull/16>`_)
 
+- Drop support for historical versions which no longer exist since Zope 4.0a2.
+
 
 4.1 (2017-06-19)
 ----------------
