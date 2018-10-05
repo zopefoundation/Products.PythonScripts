@@ -4,6 +4,10 @@ Changelog
 4.2 (unreleased)
 ----------------
 
+- Add support for Python 3.7.
+
+- Drop support for Python 3.4.
+
 - Force recompilation of scripts as the compiled code is now stored
   on `__code__` instead of `func_code`.
 
@@ -13,8 +17,6 @@ Changelog
 - Fix security declaration for ``Products.PythonScripts.standard`` which was
   broken since version 3.0.
   https://github.com/zopefoundation/Zope/issues/209
-
-- Drop support for Python 3.4.
 
 - Fix HTTP-500 error which occurred when entering code containing a
   syntax error in a PythonScript. It is now rendered as error message like
