@@ -16,7 +16,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='Products.PythonScripts',
-      version='4.2.dev0',
+      version='4.2',
       url='https://github.com/zopefoundation/Products.PythonScripts',
       license='ZPL 2.1',
       description="Provides support for restricted execution of Python "
