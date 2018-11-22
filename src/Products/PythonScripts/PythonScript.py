@@ -176,7 +176,9 @@ class PythonScript(Script, Cacheable):
 
         if not isinstance(file, str):
             if not file:
-                raise ValueError('File not specified')
+                return self.ZPythonScriptHTML_editForm(self, REQUEST,
+                                    manage_tabs_message='No file specified',
+                                    manage_tabs_type='warning')
             file = file.read()
 
         self.write(file)
