@@ -10,6 +10,7 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+import codecs
 import contextlib
 import os
 import six
@@ -19,6 +20,9 @@ import warnings
 
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
+from Testing.testbrowser import Browser
+from Testing.ZopeTestCase import FunctionalTestCase
+import Zope2
 
 from Products.PythonScripts.PythonScript import PythonScript
 
@@ -323,3 +327,29 @@ class PythonScriptInterfaceConformanceTests(unittest.TestCase):
         except ImportError:
             from webdav.interfaces import IWriteLock
         verifyClass(IWriteLock, PythonScript)
+
+
+class PythonScriptBrowserTests(FunctionalTestCase):
+    """Browser testing Python Scripts"""
+
+    def setUp(self):
+        from Products.PythonScripts.PythonScript import manage_addPythonScript
+        super(PythonScriptBrowserTests, self).setUp()
+
+        Zope2.App.zcml.load_site(force=True)
+
+        uf = self.app.acl_users
+        uf.userFolderAddUser('manager', 'manager_pass', ['Manager'], [])
+        manage_addPythonScript(self.app, 'py_script')
+
+        self.browser = Browser()
+        self.browser.addHeader(
+            'Authorization',
+            'basic {}'.format(codecs.encode(
+                b'manager:manager_pass', 'base64').decode()))
+        self.browser.open('http://localhost/py_script/manage_main')
+
+    def test_ZPythonScriptHTML_upload__no_file(self):
+        """It renders an error message if no file is uploaded."""
+        self.browser.getControl('Upload File').click()
+        self.assertIn('No file specified', self.browser.contents)

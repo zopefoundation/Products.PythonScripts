@@ -4,7 +4,8 @@ Changelog
 4.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Show a message instead of exception for empty file upload
+  (`#21 <https://github.com/zopefoundation/Products.PythonScripts/issues/21>_`)
 
 
 4.2 (2018-10-11)
