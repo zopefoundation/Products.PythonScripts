@@ -5,7 +5,7 @@ Changelog
 ----------------
 
 - Show a message instead of exception for empty file upload
-  (`#21 <https://github.com/zopefoundation/Products.PythonScripts/issues/21>_`)
+  (`#21 <https://github.com/zopefoundation/Products.PythonScripts/issues/21>`_)
 
 
 4.2 (2018-10-11)
@@ -19,7 +19,7 @@ Changelog
   on `__code__` instead of `func_code`.
 
 - Add a Python 3 compatible default script.
-  https://github.com/zopefoundation/Products.PythonScripts/pull/10
+  (`#10 <https://github.com/zopefoundation/Products.PythonScripts/pull/10>`_)
 
 - Fix security declaration for ``Products.PythonScripts.standard`` which was
   broken since version 3.0.
