@@ -23,7 +23,7 @@ Changelog
 
 - Fix security declaration for ``Products.PythonScripts.standard`` which was
   broken since version 3.0.
-  https://github.com/zopefoundation/Zope/issues/209
+  (`Zope#209 <https://github.com/zopefoundation/Zope/issues/209>`_)
 
 - Fix HTTP-500 error which occurred when entering code containing a
   syntax error in a PythonScript. It is now rendered as error message like
