@@ -192,7 +192,7 @@ class PythonScript(Script, Cacheable):
         for name in self._params.split(','):
 
             name = name.strip()
-            if name and name[0] != '*' and re.match('\w', name):
+            if name and name[0] != '*' and re.match(r'\w', name):
                 param_names.append(name.split('=', 1)[0].strip())
         return param_names
 
@@ -534,7 +534,7 @@ class PythonScriptTracebackSupplement:
 
 
 _first_indent = re.compile('(?m)^ *(?! |$)')
-_nonempty_line = re.compile('(?m)^(.*\S.*)$')
+_nonempty_line = re.compile(r'(?m)^(.*\S.*)$')
 
 _nice_bind_names = {'context': 'name_context', 'container': 'name_container',
                     'script': 'name_m_self', 'namespace': 'name_ns',
