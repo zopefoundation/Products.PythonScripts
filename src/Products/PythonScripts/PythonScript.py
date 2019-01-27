@@ -176,9 +176,10 @@ class PythonScript(Script, Cacheable):
 
         if not isinstance(file, str):
             if not file:
-                return self.ZPythonScriptHTML_editForm(self, REQUEST,
-                                    manage_tabs_message='No file specified',
-                                    manage_tabs_type='warning')
+                return self.ZPythonScriptHTML_editForm(
+                    self, REQUEST,
+                    manage_tabs_message='No file specified',
+                    manage_tabs_type='warning')
             file = file.read()
 
         self.write(file)
@@ -198,8 +199,8 @@ class PythonScript(Script, Cacheable):
 
     def __setstate__(self, state):
         Script.__setstate__(self, state)
-        if (getattr(self, 'Python_magic', None) != Python_magic or
-                getattr(self, 'Script_magic', None) != Script_magic):
+        if getattr(self, 'Python_magic', None) != Python_magic or \
+           getattr(self, 'Script_magic', None) != Script_magic:
             global _log_complaint
             if _log_complaint:
                 LOG.info(_log_complaint)
