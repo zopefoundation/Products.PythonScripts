@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.3 (unreleased)
+4.3 (2019-02-09)
 ----------------
 
 - Show a message instead of exception for empty file upload
