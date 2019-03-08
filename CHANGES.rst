@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.4 (unreleased)
+4.4 (2019-03-08)
 ----------------
 
 - Specify supported Python versions using ``python_requires`` in setup.py
