@@ -4,7 +4,7 @@ Changelog
 4.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Package metadata cleanups
 
 
 4.4 (2019-03-08)
