@@ -6,8 +6,9 @@ request = container.REQUEST
 response =  request.response
 
 # Return a string identifying this script.
-print ("This is the", script.meta_type, '"%s"' % script.getId(), end=' ')
-if script.title:
-    print ("(%s)" % html_quote(script.title), end=' ')
-print ("in", container.absolute_url())
+text = 'This is the %s %s in %s' % (script.meta_type,
+                                    html_quote(script.title_and_id()),
+                                    container.absolute_url())
+
+print(text)
 return printed

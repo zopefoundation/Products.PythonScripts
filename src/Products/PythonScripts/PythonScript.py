@@ -70,14 +70,8 @@ _log_complaint = (
     ' are edited. You can automatically recompile all Scripts that have'
     ' this problem by visiting /manage_addProduct/PythonScripts/recompile'
     ' of your server in a browser.')
-
 manage_addPythonScriptForm = DTMLFile('www/pyScriptAdd', globals())
-
-if six.PY3:
-    _default_file = os.path.join(package_home(globals()), 'www', 'default_py3')
-else:
-    _default_file = os.path.join(package_home(globals()), 'www', 'default_py2')
-
+_default_file = os.path.join(package_home(globals()), 'www', 'default_content')
 _marker = []  # Create a new marker object
 
 

@@ -4,6 +4,8 @@ Changelog
 4.5 (unreleased)
 ----------------
 
+- Provide a single default script content template for Python 2 and 3
+
 - Prevent deprecation warning by using ``importlib`` instead of ``imp``
   (`#24 <https://github.com/zopefoundation/Products.PythonScripts/issues/24>`_)
 
