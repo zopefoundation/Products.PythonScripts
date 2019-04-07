@@ -4,6 +4,9 @@ Changelog
 4.5 (unreleased)
 ----------------
 
+- Allow for entering a title when adding a Python Script
+  (`#25 <https://github.com/zopefoundation/Products.PythonScripts/issues/25>`_)
+
 - adding badges to the README for GitHub and PyPI
 
 - Package metadata cleanups
