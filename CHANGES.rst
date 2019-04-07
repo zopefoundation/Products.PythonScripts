@@ -6,6 +6,8 @@ Changelog
 
 - Package metadata cleanups
 
+- cleaned up tox test configuration
+
 
 4.4 (2019-03-08)
 ----------------
