@@ -4,6 +4,9 @@ Changelog
 4.5 (unreleased)
 ----------------
 
+- Prevent syntax warning due to outdated default script content
+  (`#26 <https://github.com/zopefoundation/Products.PythonScripts/issues/26>`_)
+
 - Allow for entering a title when adding a Python Script
   (`#25 <https://github.com/zopefoundation/Products.PythonScripts/issues/25>`_)
 
