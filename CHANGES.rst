@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.5 (unreleased)
+4.5 (2019-04-07)
 ----------------
 
 - Provide a single default script content template for Python 2 and 3
