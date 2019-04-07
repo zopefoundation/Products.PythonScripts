@@ -4,36 +4,44 @@
 
 <dtml-var "manage_form_title(this(), _, form_title='Add Python Script', )">
 
-	<p class="form-help">
-		Python Scripts allow you to add functionality to Zope by writing
-		scripts in the Python programming language that are exposed as callable 
-		Zope objects. You may choose to upload  the script from a local file by 
-		typing the file name or using the <em>browse</em> button.
-	</p>
+  <p class="form-help">
+    Python Scripts allow you to add functionality to Zope by writing
+    scripts in the Python programming language that are exposed as callable 
+    Zope objects. You may choose to upload  the script from a local file by 
+    typing the file name or using the <em>browse</em> button.
+  </p>
 
-	<form action="manage_addPythonScript" method="post" enctype="multipart/form-data" 
-		class="zmi-add zmi-pythonscript">
+  <form action="manage_addPythonScript" method="post"
+        enctype="multipart/form-data" 
+        class="zmi-add zmi-pythonscript">
 
-		<div class="form-group row">
-			<label for="id" class="form-label col-sm-3 col-md-2">Id</label>
-			<div class="col-sm-9 col-md-10">
-				<input id="id" class="form-control" type="text" name="id" />
-			</div>
-		</div>
+    <div class="form-group row">
+      <label for="id" class="form-label col-sm-3 col-md-2">Id</label>
+      <div class="col-sm-9 col-md-10">
+        <input id="id" class="form-control" type="text" name="id" />
+      </div>
+    </div>
 
-		<div class="form-group row">
-			<label for="file-data" class="form-label col-sm-3 col-md-2">File</label>
-			<div class="col-sm-9 col-md-10">
-				<input id="file-data" class="form-control form-control-file" type="file" name="file" value="" />
-			</div>
-		</div>
+    <div class="form-group row">
+      <label for="title" class="form-label col-sm-3 col-md-2">Title</label>
+      <div class="col-sm-9 col-md-10">
+        <input id="title" class="form-control" type="text" name="title" />
+      </div>
+    </div>
 
-		<div class="zmi-controls">
-			<input class="btn btn-primary" type="submit" name="submit" value="Add" />
-			<input class="btn btn-primary" type="submit" name="submit" value="Add and Edit" />
-		</div>
+    <div class="form-group row">
+      <label for="file-data" class="form-label col-sm-3 col-md-2">File</label>
+      <div class="col-sm-9 col-md-10">
+        <input id="file-data" class="form-control form-control-file" type="file" name="file" value="" />
+      </div>
+    </div>
 
-</form>
+    <div class="zmi-controls">
+      <input class="btn btn-primary" type="submit" name="submit" value="Add" />
+      <input class="btn btn-primary" type="submit" name="submit" value="Add and Edit" />
+    </div>
+
+  </form>
 
 </main>
 

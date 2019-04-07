@@ -15,5 +15,5 @@
 
 # These have been relocated, and should be imported from AccessControl
 
-from AccessControl import allow_module  # noqa
 from AccessControl import allow_class  # noqa
+from AccessControl import allow_module  # noqa

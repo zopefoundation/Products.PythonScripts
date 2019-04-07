@@ -16,20 +16,23 @@ This product provides support for Script objects containing restricted
 Python code.
 """
 
-from logging import getLogger
-from six.moves.urllib.parse import quote
+import imp  # NOQA
 import marshal
 import os
 import re
-import six
 import sys
 import types
+from logging import getLogger
+
+import six
+from six.moves.urllib.parse import quote
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import requestmethod
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
+from AccessControl.ZopeGuards import get_safe_globals
+from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_parent
 from App.Common import package_home
 from App.Dialogs import MessageDialog
@@ -38,9 +41,10 @@ from OFS.Cache import Cacheable
 from OFS.SimpleItem import SimpleItem
 from RestrictedPython import compile_restricted_function
 from Shared.DC.Scripts.Script import BindingsUI
-from Shared.DC.Scripts.Script import defaultBindings
 from Shared.DC.Scripts.Script import Script
+from Shared.DC.Scripts.Script import defaultBindings
 from zExceptions import Forbidden
+
 
 try:
     from zExceptions import ResourceLockedError
@@ -50,7 +54,6 @@ except ImportError:
 LOG = getLogger('PythonScripts')
 
 # Track the Python bytecode version
-import imp  # NOQA
 Python_magic = imp.get_magic()
 del imp
 
@@ -73,24 +76,27 @@ else:
 _marker = []  # Create a new marker object
 
 
-def manage_addPythonScript(self, id, REQUEST=None, submit=None):
+def manage_addPythonScript(self, id, title='', REQUEST=None, submit=None):
     """Add a Python script to a folder.
     """
     id = str(id)
     id = self._setObject(id, PythonScript(id))
+    pyscript = self._getOb(id)
+    if title:
+        pyscript.ZPythonScript_setTitle(title)
     if REQUEST is not None:
         file = REQUEST.form.get('file', '')
         if not isinstance(file, str):
             file = file.read()
         if not file:
             file = open(_default_file).read()
-        self._getOb(id).write(file)
+        pyscript.write(file)
         try:
             u = self.DestinationURL()
         except Exception:
             u = REQUEST['URL1']
-        if submit == "Add and Edit":
-            u = "%s/%s" % (u, quote(id))
+        if submit == 'Add and Edit':
+            u = '%s/%s' % (u, quote(id))
         REQUEST.RESPONSE.redirect(u + '/manage_main')
     return ''
 
@@ -126,9 +132,9 @@ class PythonScript(Script, Cacheable):
     security = ClassSecurityInfo()
 
     security.declareObjectProtected('View')
-    security.declareProtected('View', '__call__')
+    security.declareProtected('View', '__call__')  # NOQA: flake8: D001
 
-    security.declareProtected(
+    security.declareProtected(  # NOQA: flake8: D001
         'View management screens',
         'ZPythonScriptHTML_editForm', 'manage_main', 'read',
         'ZScriptHTML_tryForm', 'PrincipiaSearchSource',
@@ -138,17 +144,17 @@ class PythonScript(Script, Cacheable):
     manage = manage_main = ZPythonScriptHTML_editForm
     ZPythonScriptHTML_editForm._setName('ZPythonScriptHTML_editForm')
 
-    security.declareProtected(
+    security.declareProtected(  # NOQA: flake8: D001
         'Change Python Scripts',
         'ZPythonScriptHTML_editAction',
         'ZPythonScript_setTitle', 'ZPythonScript_edit',
-        'ZPythonScriptHTML_upload', )
+        'ZPythonScriptHTML_upload')
 
     def ZPythonScriptHTML_editAction(self, REQUEST, title, params, body):
         """Change the script's main parameters."""
         self.ZPythonScript_setTitle(title)
         self.ZPythonScript_edit(params, body)
-        message = "Saved changes."
+        message = 'Saved changes.'
         return self.ZPythonScriptHTML_editForm(self, REQUEST,
                                                manage_tabs_message=message)
 
@@ -161,7 +167,7 @@ class PythonScript(Script, Cacheable):
     def ZPythonScript_edit(self, params, body):
         self._validateProxy()
         if self.wl_isLocked():
-            raise ResourceLockedError("The script is locked via WebDAV.")
+            raise ResourceLockedError('The script is locked via WebDAV.')
         if not isinstance(body, str):
             body = body.read()
 
@@ -172,7 +178,7 @@ class PythonScript(Script, Cacheable):
     def ZPythonScriptHTML_upload(self, REQUEST, file=''):
         """Replace the body of the script with the text in file."""
         if self.wl_isLocked():
-            raise ResourceLockedError("The script is locked via WebDAV.")
+            raise ResourceLockedError('The script is locked via WebDAV.')
 
         if not isinstance(file, str):
             if not file:
@@ -364,7 +370,7 @@ class PythonScript(Script, Cacheable):
             'because you do not have proxy roles.\n<!--%s, %s-->' % (
                 self.id, user, roles))
 
-    security.declareProtected(
+    security.declareProtected(  # NOQA: flake8: D001
         'Change proxy roles',
         'manage_proxyForm', 'manage_proxy')
 
@@ -372,7 +378,7 @@ class PythonScript(Script, Cacheable):
 
     @requestmethod('POST')
     def manage_proxy(self, roles=(), REQUEST=None):
-        "Change Proxy Roles"
+        """Change Proxy Roles"""
         self._validateProxy(roles)
         self._validateProxy()
         self.ZCacheable_invalidate()
@@ -383,7 +389,7 @@ class PythonScript(Script, Cacheable):
                 message='Your changes have been saved',
                 action='manage_main')
 
-    security.declareProtected(
+    security.declareProtected(  # NOQA: flake8: D001
         'Change Python Scripts',
         'PUT', 'manage_FTPput', 'write')
 
@@ -456,7 +462,7 @@ class PythonScript(Script, Cacheable):
             raise
 
     def manage_FTPget(self):
-        "Get source for FTP download"
+        """Get source for FTP download"""
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
         return self.read()
 
@@ -512,8 +518,8 @@ class PythonScript(Script, Cacheable):
     getSize = get_size
 
     def PrincipiaSearchSource(self):
-        "Support for searching - the document's contents are searched."
-        return "%s\n%s" % (self._params, self._body)
+        """Support for searching - the document's contents are searched."""
+        return '%s\n%s' % (self._params, self._body)
 
     def document_src(self, REQUEST=None, RESPONSE=None):
         """Return unprocessed document source."""

@@ -13,18 +13,19 @@
 import codecs
 import contextlib
 import os
-import six
 import sys
 import unittest
 import warnings
 
+import six
+
+import Zope2
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Testing.testbrowser import Browser
 from Testing.ZopeTestCase import FunctionalTestCase
-import Zope2
 
-from Products.PythonScripts.PythonScript import PythonScript
+from ..PythonScript import PythonScript
 
 
 HERE = os.path.dirname(__file__)
@@ -57,8 +58,8 @@ class PythonScriptTestBase(unittest.TestCase):
         from AccessControl.SecurityInfo import _appliedModuleSecurity
         self._ms_before = _moduleSecurity.copy()
         self._ams_before = _appliedModuleSecurity.copy()
-        ModuleSecurityInfo('string').declarePublic('split')
-        ModuleSecurityInfo('sets').declarePublic('Set')
+        ModuleSecurityInfo('string').declarePublic('split')  # NOQA: D001
+        ModuleSecurityInfo('sets').declarePublic('Set')  # NOQA: flake8: D001
         newSecurityManager(None, None)
 
     def tearDown(self):
@@ -224,7 +225,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertEqual(res, '10.12.2007')
 
     def testRaiseSystemExitLaunchpad257269(self):
-        ps = self._newPS("raise SystemExit")
+        ps = self._newPS('raise SystemExit')
         self.assertRaises(ValueError, ps)
 
     def testEncodingTestDotTestAllLaunchpad257276(self):
@@ -249,26 +250,26 @@ class TestPythonScriptErrors(PythonScriptTestBase):
 
     def testBadImports(self):
         from zExceptions import Unauthorized
-        self.assertPSRaises(SyntaxError, body="from string import *")
-        self.assertPSRaises(Unauthorized, body="from datetime import datetime")
-        self.assertPSRaises(Unauthorized, body="import mmap")
+        self.assertPSRaises(SyntaxError, body='from string import *')
+        self.assertPSRaises(Unauthorized, body='from datetime import datetime')
+        self.assertPSRaises(Unauthorized, body='import mmap')
 
     def testAttributeAssignment(self):
         # It's illegal to assign to attributes of anything that
         # doesn't have enabling security declared.
         # Classes (and their instances) defined by restricted code
         # are an exception -- they are fully readable and writable.
-        cases = [("import string", "string"),
-                 ("def f(): pass", "f"),
+        cases = [('import string', 'string'),
+                 ('def f(): pass', 'f'),
                  ]
         assigns = ["%s.splat = 'spam'",
                    "setattr(%s, '_getattr_', lambda x, y: True)",
-                   "del %s.splat",
+                   'del %s.splat',
                    ]
 
         for defn, name in cases:
             for asn in assigns:
-                func = self._newPS(defn + "\n" + asn % name)
+                func = self._newPS(defn + '\n' + asn % name)
                 self.assertRaises(TypeError, func)
 
 
@@ -345,7 +346,7 @@ class PythonScriptBrowserTests(FunctionalTestCase):
         self.browser = Browser()
         self.browser.addHeader(
             'Authorization',
-            'basic {}'.format(codecs.encode(
+            'basic {}'.format(codecs.encode(  # NOQA: flake8: P101
                 b'manager:manager_pass', 'base64').decode()))
         self.browser.open('http://localhost/py_script/manage_main')
 

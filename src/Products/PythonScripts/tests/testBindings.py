@@ -14,11 +14,11 @@
 
 import unittest
 
+import transaction
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
-from OFS.ObjectManager import ObjectManager
 from OFS.Folder import Folder
-import transaction
+from OFS.ObjectManager import ObjectManager
 
 
 class SecurityManager(object):
@@ -86,11 +86,11 @@ class FauxFolder(Folder):
     security = ClassSecurityInfo()
     security.declareObjectPrivate()
 
-    security.declarePrivate('__repr__')
+    @security.private
     def __repr__(self):
         return '<FauxFolder: %s>' % self.getId()
 
-    security.declarePublic('methodWithRoles')
+    @security.public
     def methodWithRoles(self):
         return 'method called'
 

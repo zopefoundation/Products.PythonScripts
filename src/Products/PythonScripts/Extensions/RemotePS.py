@@ -1,4 +1,4 @@
-''' RemotePS.py
+""" RemotePS.py
 
  External Method that allows you to remotely (via XML-RPC, for instance)
  execute restricted Python code.
@@ -7,10 +7,11 @@
  root, and you can remotely call:
 
  foobarsize = s.foo.bar.restricted_exec('len(context.objectIds())')
-'''
+"""
+
+from string import join
 
 from Products.PythonScripts.PythonScript import PythonScript
-from string import join
 
 
 def restricted_exec(self, body, varmap=None):

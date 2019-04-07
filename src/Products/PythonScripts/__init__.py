@@ -11,16 +11,18 @@
 #
 ##############################################################################
 
+from Shared.DC import Scripts
+
 # To register helper functions at AccessControl and security declaration in the
 # module itself:
-from . import standard  # noqa
 from . import PythonScript
+from . import standard  # noqa
 
-from Shared.DC import Scripts
+
 __module_aliases__ = (
     ('Products.PythonScripts.Script', Scripts.Script),
     ('Products.PythonScripts.Bindings', Scripts.Bindings),
-    ('Products.PythonScripts.BindingsUI', Scripts.BindingsUI),)
+    ('Products.PythonScripts.BindingsUI', Scripts.BindingsUI))
 
 __roles__ = None
 __allow_access_to_unprotected_subobjects__ = 1
@@ -37,7 +39,7 @@ def initialize(context):
         permission='Add Python Scripts',
         constructors=(PythonScript.manage_addPythonScriptForm,
                       PythonScript.manage_addPythonScript),
-        icon='www/pyscript.gif'
+        icon='www/pyscript.gif',
     )
 
     global _m
@@ -46,7 +48,7 @@ def initialize(context):
 
 
 def recompile(self):
-    '''Recompile all Python Scripts'''
+    """Recompile all Python Scripts"""
     base = self.this()
     scripts = base.ZopeFind(base, obj_metatypes=('Script (Python)',),
                             search_sub=1)
