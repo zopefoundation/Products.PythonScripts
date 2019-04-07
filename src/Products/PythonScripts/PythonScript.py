@@ -16,7 +16,6 @@ This product provides support for Script objects containing restricted
 Python code.
 """
 
-import imp  # NOQA
 import marshal
 import os
 import re
@@ -54,8 +53,14 @@ except ImportError:
 LOG = getLogger('PythonScripts')
 
 # Track the Python bytecode version
-Python_magic = imp.get_magic()
-del imp
+try:
+    import importlib.util
+    Python_magic = importlib.util.MAGIC_NUMBER
+    del importlib.util
+except ImportError:  # Python 2
+    import imp
+    Python_magic = imp.get_magic()
+    del imp
 
 # This should only be incremented to force recompilation.
 Script_magic = 4

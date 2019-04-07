@@ -4,6 +4,9 @@ Changelog
 4.5 (unreleased)
 ----------------
 
+- Prevent deprecation warning by using ``importlib`` instead of ``imp``
+  (`#24 <https://github.com/zopefoundation/Products.PythonScripts/issues/24>`_)
+
 - Prevent syntax warning due to outdated default script content
   (`#26 <https://github.com/zopefoundation/Products.PythonScripts/issues/26>`_)
 
