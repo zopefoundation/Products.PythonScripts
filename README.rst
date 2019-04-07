@@ -1,13 +1,26 @@
-Overview
-========
+.. image:: https://travis-ci.org/zopefoundation/Products.PythonScripts.svg?branch=master
+   :target: https://travis-ci.org/zopefoundation/Products.PythonScripts
 
+.. image:: https://coveralls.io/repos/github/zopefoundation/Products.PythonScripts/badge.svg?branch=master
+   :target: https://coveralls.io/github/zopefoundation/Products.PythonScripts?branch=master
+
+.. image:: https://img.shields.io/pypi/v/Products.PythonScripts.svg
+   :target: https://pypi.org/project/Products.PythonScripts/
+   :alt: Current version on PyPI
+
+.. image:: https://img.shields.io/pypi/pyversions/Products.PythonScripts.svg
+   :target: https://pypi.org/project/Products.PythonScripts/
+   :alt: Supported Python versions
+
+
+Products.PythonScripts
+======================
 The Python Scripts product provides support for restricted execution of
 Python scripts, exposing them as callable objects within the Zope
 environment.
 
 Providing access to extra modules
 ---------------------------------
-
 Python script objects have a limited number of "safe" modules
 available to them by default. In the course of working with Zope,
 you will probably wish to make other modules available to script

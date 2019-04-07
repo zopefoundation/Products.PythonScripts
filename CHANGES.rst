@@ -4,6 +4,8 @@ Changelog
 4.5 (unreleased)
 ----------------
 
+- adding badges to the README for GitHub and PyPI
+
 - Package metadata cleanups
 
 - cleaned up tox test configuration
