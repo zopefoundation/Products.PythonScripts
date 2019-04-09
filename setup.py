@@ -27,7 +27,7 @@ setup(name='Products.PythonScripts',
       },
       license='ZPL 2.1',
       description='Provides support for restricted execution of Python '
-                  'scripts in Zope 4.',
+                  'scripts in Zope.',
       author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
       long_description=('%s\n%s' % (open('README.rst').read(),
