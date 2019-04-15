@@ -1,10 +1,10 @@
 Changelog
 =========
 
-4.6 (unreleased)
+4.6 (2019-04-15)
 ----------------
 
-- Fix a serious error that prevents scripts from compiling
+- Fix a serious error that prevents page templates from compiling
   (`#27 <https://github.com/zopefoundation/Products.PythonScripts/issues/27>`_)
 
 
