@@ -4,6 +4,9 @@ Changelog
 4.6 (unreleased)
 ----------------
 
+- Fix a serious error that prevents scripts from compiling
+  (`#27 <https://github.com/zopefoundation/Products.PythonScripts/issues/27>`_)
+
 
 4.5 (2019-04-07)
 ----------------

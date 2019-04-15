@@ -56,7 +56,6 @@ LOG = getLogger('PythonScripts')
 try:
     import importlib.util
     Python_magic = importlib.util.MAGIC_NUMBER
-    del importlib.util
 except ImportError:  # Python 2
     import imp
     Python_magic = imp.get_magic()
