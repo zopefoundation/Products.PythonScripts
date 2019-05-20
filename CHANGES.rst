@@ -4,6 +4,9 @@ Changelog
 4.7 (unreleased)
 ----------------
 
+- Make sure a template's ``_body`` attribute is a native string in Python 3
+  (`#30 <https://github.com/zopefoundation/Products.PythonScripts/issues/30>`_)
+
 
 4.6 (2019-04-15)
 ----------------

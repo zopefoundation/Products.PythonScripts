@@ -29,6 +29,7 @@ __allow_access_to_unprotected_subobjects__ = 1
 
 zodbupdate_decode_dict = {
     'Products.PythonScripts.PythonScript PythonScript Python_magic': 'binary',
+    'Products.PythonScripts.PythonScript PythonScript _body': 'utf-8',
     'Products.PythonScripts.PythonScript PythonScript _code': 'binary',
 }
 
