@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.7 (unreleased)
+4.7 (2019-05-21)
 ----------------
 
 - Make sure a template's ``_body`` attribute is a native string in Python 3
