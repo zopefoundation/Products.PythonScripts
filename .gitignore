@@ -8,6 +8,7 @@
 .installed.cfg
 .mr.developer.cfg
 .python-version
+default.profraw
 .tox/
 bin/
 build/
