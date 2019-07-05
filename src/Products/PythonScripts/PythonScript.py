@@ -122,7 +122,18 @@ class PythonScript(Script, Cacheable):
     ) + SimpleItem.manage_options + \
         Cacheable.manage_options
 
+    # following identifiers are not allowed due to interaction with
+    # RestrictedPython
+    bad_identifiers = [
+            'context', 'container', 'script', 'traverse_subpath'
+    ]
+
     def __init__(self, id):
+        if id in self.bad_identifiers:
+            raise ValueError(
+                "%s is not allowed as an identifier. "
+                "Please choose another name." % id
+                )
         self.id = id
         self.ZBindings_edit(defaultBindings)
         self._makeFunction()

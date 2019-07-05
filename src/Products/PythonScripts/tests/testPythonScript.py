@@ -272,6 +272,19 @@ class TestPythonScriptErrors(PythonScriptTestBase):
                 func = self._newPS(defn + '\n' + asn % name)
                 self.assertRaises(TypeError, func)
 
+    def testBadIdentifiers(self):
+        """Some identifiers have to be avoided.
+
+        Background:
+        https://github.com/zopefoundation/Zope/issues/669
+        """
+        bad_identifiers = [
+            'context', 'container', 'script', 'traverse_subpath'
+            ]
+        for identifier in bad_identifiers:
+            with self.assertRaises(ValueError):
+                PythonScript(identifier)
+
 
 class TestPythonScriptGlobals(PythonScriptTestBase):
 
