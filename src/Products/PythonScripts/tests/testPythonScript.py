@@ -279,7 +279,7 @@ class TestPythonScriptErrors(PythonScriptTestBase):
         https://github.com/zopefoundation/Zope/issues/669
         """
         bad_identifiers = [
-            'context', 'container', 'script', 'traverse_subpath'
+            'context', 'container', 'script', 'traverse_subpath',
             ]
         for identifier in bad_identifiers:
             with self.assertRaises(ValueError):
