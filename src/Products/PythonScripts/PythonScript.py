@@ -61,12 +61,6 @@ except ImportError:  # Python 2
     Python_magic = imp.get_magic()
     del imp
 
-
-# Following identifiers are not allowed to use when instantiating
-# PythonScript due to interaction with RestrictedPython.
-BAD_IDENTIFIERS = [
-    'context', 'container', 'script', 'traverse_subpath',
-]
 # This should only be incremented to force recompilation.
 Script_magic = 4
 _log_complaint = (
@@ -129,13 +123,16 @@ class PythonScript(Script, Cacheable):
         Cacheable.manage_options
 
     def __init__(self, id):
-        if id in BAD_IDENTIFIERS:
+        self.ZBindings_edit(defaultBindings)
+        bind_names = self.getBindingAssignments().getAssignedNamesInOrder()
+        if id in bind_names:
             raise ValueError(
-                '%s is not allowed as an identifier. '
-                'Please choose another name.' % id,
+                'Following names are not allowed as identifiers, as they'
+                'have a special meaning for PythonScript: '
+                '%s.'
+                'Please choose another name.' % ', '.join(bind_names),
                 )
         self.id = id
-        self.ZBindings_edit(defaultBindings)
         self._makeFunction()
 
     security = ClassSecurityInfo()
