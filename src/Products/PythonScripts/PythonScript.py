@@ -123,8 +123,16 @@ class PythonScript(Script, Cacheable):
         Cacheable.manage_options
 
     def __init__(self, id):
-        self.id = id
         self.ZBindings_edit(defaultBindings)
+        bind_names = self.getBindingAssignments().getAssignedNamesInOrder()
+        if id in bind_names:
+            raise ValueError(
+                'Following names are not allowed as identifiers, as they'
+                'have a special meaning for PythonScript: '
+                '%s.'
+                'Please choose another name.' % ', '.join(bind_names),
+                )
+        self.id = id
         self._makeFunction()
 
     security = ClassSecurityInfo()
