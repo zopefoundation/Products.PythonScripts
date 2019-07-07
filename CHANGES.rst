@@ -3,6 +3,8 @@ Changelog
 
 4.8 (unreleased)
 ----------------
+- Show proper error message for not allowed identifiers.
+  (`#33 <https://github.com/zopefoundation/Products.PythonScripts/issues/33>`_)
 
 
 4.7 (2019-05-21)
