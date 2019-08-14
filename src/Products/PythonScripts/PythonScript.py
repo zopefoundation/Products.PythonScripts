@@ -138,9 +138,9 @@ class PythonScript(Script, Cacheable):
     security = ClassSecurityInfo()
 
     security.declareObjectProtected('View')
-    security.declareProtected('View', '__call__')  # NOQA: flake8: D001
+    security.declareProtected('View', '__call__')  # noqa: D001
 
-    security.declareProtected(  # NOQA: flake8: D001
+    security.declareProtected(  # noqa: D001
         'View management screens',
         'ZPythonScriptHTML_editForm', 'manage_main', 'read',
         'ZScriptHTML_tryForm', 'PrincipiaSearchSource',
@@ -150,7 +150,7 @@ class PythonScript(Script, Cacheable):
     manage = manage_main = ZPythonScriptHTML_editForm
     ZPythonScriptHTML_editForm._setName('ZPythonScriptHTML_editForm')
 
-    security.declareProtected(  # NOQA: flake8: D001
+    security.declareProtected(  # noqa: D001
         'Change Python Scripts',
         'ZPythonScriptHTML_editAction',
         'ZPythonScript_setTitle', 'ZPythonScript_edit',
@@ -376,7 +376,7 @@ class PythonScript(Script, Cacheable):
             'because you do not have proxy roles.\n<!--%s, %s-->' % (
                 self.id, user, roles))
 
-    security.declareProtected(  # NOQA: flake8: D001
+    security.declareProtected(  # noqa: D001
         'Change proxy roles',
         'manage_proxyForm', 'manage_proxy')
 
@@ -395,7 +395,7 @@ class PythonScript(Script, Cacheable):
                 message='Your changes have been saved',
                 action='manage_main')
 
-    security.declareProtected(  # NOQA: flake8: D001
+    security.declareProtected(  # NOQA: D001
         'Change Python Scripts',
         'PUT', 'manage_FTPput', 'write')
 
