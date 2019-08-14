@@ -58,8 +58,8 @@ class PythonScriptTestBase(unittest.TestCase):
         from AccessControl.SecurityInfo import _appliedModuleSecurity
         self._ms_before = _moduleSecurity.copy()
         self._ams_before = _appliedModuleSecurity.copy()
-        ModuleSecurityInfo('string').declarePublic('split')  # NOQA: D001
-        ModuleSecurityInfo('sets').declarePublic('Set')  # NOQA: flake8: D001
+        ModuleSecurityInfo('string').declarePublic('split')  # noqa: D001
+        ModuleSecurityInfo('sets').declarePublic('Set')  # noqa: D001
         newSecurityManager(None, None)
 
     def tearDown(self):
@@ -359,7 +359,7 @@ class PythonScriptBrowserTests(FunctionalTestCase):
         self.browser = Browser()
         self.browser.addHeader(
             'Authorization',
-            'basic {}'.format(codecs.encode(  # NOQA: flake8: P101
+            'basic {}'.format(codecs.encode(  # noqa: P101
                 b'manager:manager_pass', 'base64').decode()))
         self.browser.open('http://localhost/py_script/manage_main')
 

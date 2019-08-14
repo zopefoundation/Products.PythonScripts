@@ -42,7 +42,7 @@ from ZPublisher.HTTPRequest import record
 
 security = ModuleSecurityInfo('Products.PythonScripts.standard')
 
-security.declarePublic(  # NOQA: flake8: D001
+security.declarePublic(  # noqa: D001
     'special_formats',
     'whole_dollars',
     'dollars_and_cents',
