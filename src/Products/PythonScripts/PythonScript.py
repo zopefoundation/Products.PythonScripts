@@ -37,6 +37,8 @@ from App.Common import package_home
 from App.Dialogs import MessageDialog
 from App.special_dtml import DTMLFile
 from OFS.Cache import Cacheable
+from OFS.History import Historical
+from OFS.History import html_diff
 from OFS.SimpleItem import SimpleItem
 from RestrictedPython import compile_restricted_function
 from Shared.DC.Scripts.Script import BindingsUI
@@ -99,7 +101,7 @@ def manage_addPythonScript(self, id, title='', REQUEST=None, submit=None):
     return ''
 
 
-class PythonScript(Script, Cacheable):
+class PythonScript(Script, Historical, Cacheable):
     """Web-callable scripts written in a safe subset of Python.
 
     The function may include standard python code, so long as it does
@@ -119,7 +121,7 @@ class PythonScript(Script, Cacheable):
     ) + BindingsUI.manage_options + (
         {'label': 'Test', 'action': 'ZScriptHTML_tryForm'},
         {'label': 'Proxy', 'action': 'manage_proxyForm'},
-    ) + SimpleItem.manage_options + \
+    ) + Historical.manage_options + SimpleItem.manage_options + \
         Cacheable.manage_options
 
     def __init__(self, id):
@@ -208,6 +210,12 @@ class PythonScript(Script, Cacheable):
             if name and name[0] != '*' and re.match(r'\w', name):
                 param_names.append(name.split('=', 1)[0].strip())
         return param_names
+
+    def manage_historyCompare(self, rev1, rev2, REQUEST,
+                              historyComparisonResults=''):
+        return PythonScript.inheritedAttribute('manage_historyCompare')(
+            self, rev1, rev2, REQUEST,
+            historyComparisonResults=html_diff(rev1.read(), rev2.read()))
 
     def __setstate__(self, state):
         Script.__setstate__(self, state)
@@ -397,7 +405,9 @@ class PythonScript(Script, Cacheable):
 
     security.declareProtected(  # NOQA: D001
         'Change Python Scripts',
-        'PUT', 'manage_FTPput', 'write')
+        'PUT', 'manage_FTPput', 'write',
+        'manage_historyCopy',
+        'manage_beforeHistoryCopy', 'manage_afterHistoryCopy')
 
     def PUT(self, REQUEST, RESPONSE):
         """ Handle HTTP PUT requests """
