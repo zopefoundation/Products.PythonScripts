@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.8 (unreleased)
+4.8 (2019-09-04)
 ----------------
 
 - Show proper error message for not allowed identifiers.

@@ -17,7 +17,7 @@ from setuptools import setup
 
 
 setup(name='Products.PythonScripts',
-      version='4.8.dev0',
+      version='4.8',
       url='https://github.com/zopefoundation/Products.PythonScripts',
       project_urls={
           'Issue Tracker': ('https://github.com/zopefoundation/'
