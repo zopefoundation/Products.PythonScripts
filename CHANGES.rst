@@ -3,6 +3,8 @@ Changelog
 
 4.9 (unreleased)
 ----------------
+- prevent ResourceWarning/Error by closing default contents file
+  (`#39 <https://github.com/zopefoundation/Products.PythonScripts/issues/39>`_)
 
 
 4.8 (2019-09-04)

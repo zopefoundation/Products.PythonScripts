@@ -9,6 +9,7 @@
 .mr.developer.cfg
 .python-version
 default.profraw
+pyvenv.cfg
 .tox/
 bin/
 build/

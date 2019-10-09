@@ -89,7 +89,8 @@ def manage_addPythonScript(self, id, title='', REQUEST=None, submit=None):
         if not isinstance(file, str):
             file = file.read()
         if not file:
-            file = open(_default_file).read()
+            with open(_default_file) as fp:
+                file = fp.read()
         pyscript.write(file)
         try:
             u = self.DestinationURL()
