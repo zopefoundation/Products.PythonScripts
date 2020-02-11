@@ -1,6 +1,12 @@
 Changelog
 =========
 
+4.10 (unreleased)
+-----------------
+- override ``manage_DAVget`` to get correct editable sources
+  (`#40 <https://github.com/zopefoundation/Products.PythonScripts/issues/40>`_)
+
+
 4.9 (2019-10-09)
 ----------------
 - prevent ResourceWarning/Error by closing default contents file

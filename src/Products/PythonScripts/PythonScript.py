@@ -480,10 +480,12 @@ class PythonScript(Script, Historical, Cacheable):
             LOG.error('write failed', exc_info=sys.exc_info())
             raise
 
-    def manage_FTPget(self):
-        """Get source for FTP download"""
+    def manage_DAVget(self):
+        """Get source for WebDAV"""
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
         return self.read()
+
+    manage_FTPget = manage_DAVget
 
     def _metadata_map(self):
         m = {
