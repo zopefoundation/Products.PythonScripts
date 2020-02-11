@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.10 (unreleased)
+4.10 (2020-02-11)
 -----------------
 - override ``manage_DAVget`` to get correct editable sources
   (`#40 <https://github.com/zopefoundation/Products.PythonScripts/issues/40>`_)
