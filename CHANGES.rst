@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.11 (unreleased)
+4.11 (2020-02-11)
 -----------------
 - fix ``PUT`` issues with string encoding
 
