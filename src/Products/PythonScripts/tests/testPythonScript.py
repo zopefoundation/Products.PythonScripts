@@ -22,6 +22,7 @@ import six
 import Zope2
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
+from Testing.makerequest import makerequest
 from Testing.testbrowser import Browser
 from Testing.ZopeTestCase import FunctionalTestCase
 
@@ -231,6 +232,68 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
     def testEncodingTestDotTestAllLaunchpad257276(self):
         ps = self._newPS("return 'foo'.encode('test.testall')")
         self.assertRaises(LookupError, ps)
+
+    def test_manage_DAVget(self):
+        ps = makerequest(self._filePS('complete'))
+        self.assertEqual(ps.read(), ps.manage_DAVget())
+
+    def test_PUT_native_string(self):
+        ps = makerequest(self._filePS('complete'))
+        self.assertEqual(ps.title, 'This is a title')
+        self.assertEqual(ps.body(), 'print(foo+bar+baz)\nreturn printed\n')
+        self.assertEqual(ps.params(), 'foo, bar, baz=1')
+        new_body = u"""\
+## Script (Python) "complete"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
+##parameters=oops
+##title=New Title
+##
+return \xe4\xe9\xee\xf6\xfc
+"""
+        ps.REQUEST['BODY'] = new_body
+        ps._filepath = 'fake'
+        ps.PUT(ps.REQUEST, ps.REQUEST.RESPONSE)
+        self.assertEqual(ps.title, 'New Title')
+        if six.PY3:
+            self.assertEqual(ps.body(), 'return \xe4\xe9\xee\xf6\xfc\n')
+        else:
+            self.assertEqual(
+                ps.body(),
+                'return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc\n')
+        self.assertEqual(ps.params(), 'oops')
+
+    def test_PUT_bytes(self):
+        ps = makerequest(self._filePS('complete'))
+        self.assertEqual(ps.title, 'This is a title')
+        self.assertEqual(ps.body(), 'print(foo+bar+baz)\nreturn printed\n')
+        self.assertEqual(ps.params(), 'foo, bar, baz=1')
+        new_body = b"""\
+## Script (Python) "complete"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
+##parameters=oops
+##title=New Title
+##
+return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
+"""
+        ps.REQUEST['BODY'] = new_body
+        ps._filepath = 'fake'
+        ps.PUT(ps.REQUEST, ps.REQUEST.RESPONSE)
+        self.assertEqual(ps.title, 'New Title')
+        if six.PY3:
+            self.assertEqual(ps.body(), 'return \xe4\xe9\xee\xf6\xfc\n')
+        else:
+            self.assertEqual(
+                ps.body(),
+                'return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc\n')
+        self.assertEqual(ps.params(), 'oops')
 
 
 class TestPythonScriptErrors(PythonScriptTestBase):

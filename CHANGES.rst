@@ -3,6 +3,7 @@ Changelog
 
 4.11 (unreleased)
 -----------------
+- fix ``PUT`` issues with string encoding
 
 
 4.10 (2020-02-11)

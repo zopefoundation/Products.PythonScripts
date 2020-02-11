@@ -415,7 +415,12 @@ class PythonScript(Script, Historical, Cacheable):
         """ Handle HTTP PUT requests """
         self.dav__init(REQUEST, RESPONSE)
         self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
-        self.write(REQUEST.get('BODY', ''))
+        new_body = REQUEST.get('BODY', '')
+        if six.PY3 and isinstance(new_body, bytes):
+            new_body = new_body.decode('UTF-8')
+        elif six.PY2 and not isinstance(new_body, bytes):
+            new_body = new_body.encode('UTF-8')
+        self.write(new_body)
         RESPONSE.setStatus(204)
         return RESPONSE
 
