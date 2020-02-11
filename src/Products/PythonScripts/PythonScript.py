@@ -27,6 +27,9 @@ import six
 from six.moves.urllib.parse import quote
 
 from AccessControl.class_init import InitializeClass
+from AccessControl.Permissions import change_proxy_roles
+from AccessControl.Permissions import change_python_scripts
+from AccessControl.Permissions import view_management_screens
 from AccessControl.requestmethod import requestmethod
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
@@ -144,21 +147,14 @@ class PythonScript(Script, Historical, Cacheable):
     security.declareProtected('View', '__call__')  # noqa: D001
 
     security.declareProtected(  # noqa: D001
-        'View management screens',
-        'ZPythonScriptHTML_editForm', 'manage_main', 'read',
-        'ZScriptHTML_tryForm', 'PrincipiaSearchSource',
-        'document_src', 'params', 'body', 'get_filepath')
+        view_management_screens,
+        'ZPythonScriptHTML_editForm', 'manage_main', 'ZScriptHTML_tryForm')
 
     ZPythonScriptHTML_editForm = DTMLFile('www/pyScriptEdit', globals())
     manage = manage_main = ZPythonScriptHTML_editForm
     ZPythonScriptHTML_editForm._setName('ZPythonScriptHTML_editForm')
 
-    security.declareProtected(  # noqa: D001
-        'Change Python Scripts',
-        'ZPythonScriptHTML_editAction',
-        'ZPythonScript_setTitle', 'ZPythonScript_edit',
-        'ZPythonScriptHTML_upload')
-
+    @security.protected(change_python_scripts)
     def ZPythonScriptHTML_editAction(self, REQUEST, title, params, body):
         """Change the script's main parameters."""
         self.ZPythonScript_setTitle(title)
@@ -167,12 +163,14 @@ class PythonScript(Script, Historical, Cacheable):
         return self.ZPythonScriptHTML_editForm(self, REQUEST,
                                                manage_tabs_message=message)
 
+    @security.protected(change_python_scripts)
     def ZPythonScript_setTitle(self, title):
         title = str(title)
         if self.title != title:
             self.title = title
             self.ZCacheable_invalidate()
 
+    @security.protected(change_python_scripts)
     def ZPythonScript_edit(self, params, body):
         self._validateProxy()
         if self.wl_isLocked():
@@ -184,6 +182,7 @@ class PythonScript(Script, Historical, Cacheable):
             self._params = str(params)
             self.write(body)
 
+    @security.protected(change_python_scripts)
     def ZPythonScriptHTML_upload(self, REQUEST, file=''):
         """Replace the body of the script with the text in file."""
         if self.wl_isLocked():
@@ -212,6 +211,7 @@ class PythonScript(Script, Historical, Cacheable):
                 param_names.append(name.split('=', 1)[0].strip())
         return param_names
 
+    @security.protected(view_management_screens)
     def manage_historyCompare(self, rev1, rev2, REQUEST,
                               historyComparisonResults=''):
         return PythonScript.inheritedAttribute('manage_historyCompare')(
@@ -366,6 +366,7 @@ class PythonScript(Script, Historical, Cacheable):
         # shut up deprecation warnings
         pass
 
+    @security.protected(view_management_screens)
     def get_filepath(self):
         return self.meta_type + ':' + '/'.join(self.getPhysicalPath())
 
@@ -385,12 +386,12 @@ class PythonScript(Script, Historical, Cacheable):
             'because you do not have proxy roles.\n<!--%s, %s-->' % (
                 self.id, user, roles))
 
-    security.declareProtected(  # noqa: D001
-        'Change proxy roles',
-        'manage_proxyForm', 'manage_proxy')
+    security.declareProtected(change_proxy_roles,  # NOQA: D001
+                              'manage_proxyForm')
 
     manage_proxyForm = DTMLFile('www/pyScriptProxy', globals())
 
+    @security.protected(change_proxy_roles)
     @requestmethod('POST')
     def manage_proxy(self, roles=(), REQUEST=None):
         """Change Proxy Roles"""
@@ -405,11 +406,11 @@ class PythonScript(Script, Historical, Cacheable):
                 action='manage_main')
 
     security.declareProtected(  # NOQA: D001
-        'Change Python Scripts',
-        'PUT', 'manage_FTPput', 'write',
-        'manage_historyCopy',
+        change_python_scripts,
+        'manage_FTPput', 'manage_historyCopy',
         'manage_beforeHistoryCopy', 'manage_afterHistoryCopy')
 
+    @security.protected(change_python_scripts)
     def PUT(self, REQUEST, RESPONSE):
         """ Handle HTTP PUT requests """
         self.dav__init(REQUEST, RESPONSE)
@@ -420,6 +421,7 @@ class PythonScript(Script, Historical, Cacheable):
 
     manage_FTPput = PUT
 
+    @security.protected(change_python_scripts)
     def write(self, text):
         """ Change the Script by parsing a read()-style source text. """
         self._validateProxy()
@@ -493,6 +495,7 @@ class PythonScript(Script, Historical, Cacheable):
             m['bind ' + k] = bindmap.get(v, '')
         return m
 
+    @security.protected(view_management_screens)
     def read(self):
         """ Generate a text representation of the Script source.
 
@@ -523,9 +526,11 @@ class PythonScript(Script, Historical, Cacheable):
         hlines.append('')
         return ('\n' + prefix).join(hlines) + '\n' + self._body
 
+    @security.protected(view_management_screens)
     def params(self):
         return self._params
 
+    @security.protected(view_management_screens)
     def body(self):
         return self._body
 
@@ -534,10 +539,12 @@ class PythonScript(Script, Historical, Cacheable):
 
     getSize = get_size
 
+    @security.protected(view_management_screens)
     def PrincipiaSearchSource(self):
         """Support for searching - the document's contents are searched."""
         return '%s\n%s' % (self._params, self._body)
 
+    @security.protected(view_management_screens)
     def document_src(self, REQUEST=None, RESPONSE=None):
         """Return unprocessed document source."""
 
