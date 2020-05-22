@@ -430,3 +430,11 @@ class PythonScriptBrowserTests(FunctionalTestCase):
         """It renders an error message if no file is uploaded."""
         self.browser.getControl('Upload File').click()
         self.assertIn('No file specified', self.browser.contents)
+
+    def test_ZPythonScriptHTML_upload__with_file(self):
+        file_contents = b'print("hello")'
+        self.browser.getControl('file').add_file(
+             file_contents, 'text/plain', 'script.py')
+        self.browser.getControl('Upload File').click()
+
+        assert 'Saved changes.' in self.browser.contents
