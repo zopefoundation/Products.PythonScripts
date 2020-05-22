@@ -195,6 +195,7 @@ class PythonScript(Script, Historical, Cacheable):
                     manage_tabs_message='No file specified',
                     manage_tabs_type='warning')
             file = file.read()
+            file = file.decode('utf-8')
 
         self.write(file)
         message = 'Saved changes.'
