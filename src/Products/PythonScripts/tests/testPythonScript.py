@@ -295,6 +295,15 @@ return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
                 'return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc\n')
         self.assertEqual(ps.params(), 'oops')
 
+    def test_write(self):
+        ps = self._newPS('')
+
+        ps.write(b'return 1')
+        self.assertEqual(ps.body(), 'return 1\n')
+
+        ps.write(u'return 1')
+        self.assertEqual(ps.body(), 'return 1\n')
+
 
 class TestPythonScriptErrors(PythonScriptTestBase):
 
