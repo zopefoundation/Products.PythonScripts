@@ -80,7 +80,8 @@ _default_file = os.path.join(package_home(globals()), 'www', 'default_content')
 _marker = []  # Create a new marker object
 
 
-def manage_addPythonScript(self, id, title='', REQUEST=None, submit=None):
+def manage_addPythonScript(self, id, title='', file=None, REQUEST=None,
+                           submit=None):
     """Add a Python script to a folder.
     """
     id = str(id)
@@ -88,14 +89,16 @@ def manage_addPythonScript(self, id, title='', REQUEST=None, submit=None):
     pyscript = self._getOb(id)
     if title:
         pyscript.ZPythonScript_setTitle(title)
+
+    file = file or (REQUEST and REQUEST.form.get('file'))
+    if hasattr(file, 'read'):
+        file = file.read()
+    if not file:
+        with open(_default_file) as fp:
+            file = fp.read()
+    pyscript.write(file)
+
     if REQUEST is not None:
-        file = REQUEST.form.get('file', '')
-        if not isinstance(file, str):
-            file = file.read()
-        if not file:
-            with open(_default_file) as fp:
-                file = fp.read()
-        pyscript.write(file)
         try:
             u = self.DestinationURL()
         except Exception:

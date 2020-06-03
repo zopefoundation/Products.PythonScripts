@@ -12,6 +12,7 @@
 ##############################################################################
 import codecs
 import contextlib
+import io
 import os
 import sys
 import unittest
@@ -22,6 +23,7 @@ import six
 import Zope2
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
+from OFS.Folder import Folder
 from Testing.makerequest import makerequest
 from Testing.testbrowser import Browser
 from Testing.ZopeTestCase import FunctionalTestCase
@@ -49,6 +51,13 @@ def readf(name):
     path = os.path.join(HERE, 'tscripts', '%s.ps' % name)
     with open(path, 'r') as f:
         return f.read()
+
+
+class DummyFolder(Folder):
+    """ Stitch in an implementation for getPhysicalPath """
+
+    def getPhysicalPath(self):
+        return ()
 
 
 class PythonScriptTestBase(unittest.TestCase):
@@ -303,6 +312,73 @@ return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
 
         ps.write(u'return 1')
         self.assertEqual(ps.body(), 'return 1\n')
+
+    def test_factory(self):
+        from Products.PythonScripts.PythonScript import manage_addPythonScript
+
+        # Only passing the id
+        container = DummyFolder('container')
+        manage_addPythonScript(container, 'testing')
+        self.assertEqual(container.testing.getId(), 'testing')
+        self.assertEqual(container.testing.title, '')
+        self.assertIn('# Example code:', container.testing.body())
+        self.assertEqual(container.testing.params(), '')
+
+        # Passing id and a title
+        container = DummyFolder('container')
+        manage_addPythonScript(container, 'testing', title='This is a title')
+        self.assertEqual(container.testing.getId(), 'testing')
+        self.assertEqual(container.testing.title, 'This is a title')
+        self.assertIn('# Example code:', container.testing.body())
+        self.assertEqual(container.testing.params(), '')
+
+        # Passing id, title and a request that has no file
+        container = makerequest(DummyFolder('container'))
+        container.REQUEST.form = {}
+        manage_addPythonScript(container, 'testing', title='This is a title',
+                               REQUEST=container.REQUEST)
+        self.assertEqual(container.testing.getId(), 'testing')
+        self.assertEqual(container.testing.title, 'This is a title')
+        self.assertIn('# Example code:', container.testing.body())
+        self.assertEqual(container.testing.params(), '')
+
+        # Passing id, title and a request ith a file string
+        container = makerequest(DummyFolder('container'))
+        container.REQUEST.form = {'file': 'return 1'}
+        manage_addPythonScript(container, 'testing', title='This is a title',
+                               REQUEST=container.REQUEST)
+        self.assertEqual(container.testing.getId(), 'testing')
+        self.assertEqual(container.testing.title, 'This is a title')
+        self.assertEqual(container.testing.body(), 'return 1\n')
+        self.assertEqual(container.testing.params(), '')
+
+        # Passing id, title and a request with a file object
+        container = makerequest(DummyFolder('container'))
+        container.REQUEST.form = {'file': io.BytesIO(b'return 1')}
+        manage_addPythonScript(container, 'testing', title='This is a title',
+                               REQUEST=container.REQUEST)
+        self.assertEqual(container.testing.getId(), 'testing')
+        self.assertEqual(container.testing.title, 'This is a title')
+        self.assertEqual(container.testing.body(), 'return 1\n')
+        self.assertEqual(container.testing.params(), '')
+
+        # Passing id, title and a file string
+        container = makerequest(DummyFolder('container'))
+        manage_addPythonScript(container, 'testing', title='This is a title',
+                               file=b'return 1')
+        self.assertEqual(container.testing.getId(), 'testing')
+        self.assertEqual(container.testing.title, 'This is a title')
+        self.assertEqual(container.testing.body(), 'return 1\n')
+        self.assertEqual(container.testing.params(), '')
+
+        # Passing id, title and a file object
+        container = makerequest(DummyFolder('container'))
+        manage_addPythonScript(container, 'testing', title='This is a title',
+                               file=io.BytesIO(b'return 1'))
+        self.assertEqual(container.testing.getId(), 'testing')
+        self.assertEqual(container.testing.title, 'This is a title')
+        self.assertEqual(container.testing.body(), 'return 1\n')
+        self.assertEqual(container.testing.params(), '')
 
 
 class TestPythonScriptErrors(PythonScriptTestBase):

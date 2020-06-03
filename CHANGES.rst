@@ -3,23 +3,30 @@ Changelog
 
 4.12 (unreleased)
 -----------------
+
+- add a ``file`` parameter to factory function ``manage_addPythonScript``
+  (`#45 <https://github.com/zopefoundation/Products.PythonScripts/issues/45>`_)
+
 - fix ``TypeError`` when updating an existing script from a file
   (`#43 <https://github.com/zopefoundation/Products.PythonScripts/issues/43>`_)
 
 
 4.11 (2020-02-11)
 -----------------
+
 - fix ``PUT`` issues with string encoding
 
 
 4.10 (2020-02-11)
 -----------------
+
 - override ``manage_DAVget`` to get correct editable sources
   (`#40 <https://github.com/zopefoundation/Products.PythonScripts/issues/40>`_)
 
 
 4.9 (2019-10-09)
 ----------------
+
 - prevent ResourceWarning/Error by closing default contents file
   (`#39 <https://github.com/zopefoundation/Products.PythonScripts/issues/39>`_)
 
