@@ -295,6 +295,15 @@ return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
                 'return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc\n')
         self.assertEqual(ps.params(), 'oops')
 
+    def test_write(self):
+        ps = self._newPS('')
+
+        ps.write(b'return 1')
+        self.assertEqual(ps.body(), 'return 1\n')
+
+        ps.write(u'return 1')
+        self.assertEqual(ps.body(), 'return 1\n')
+
 
 class TestPythonScriptErrors(PythonScriptTestBase):
 
@@ -430,3 +439,11 @@ class PythonScriptBrowserTests(FunctionalTestCase):
         """It renders an error message if no file is uploaded."""
         self.browser.getControl('Upload File').click()
         self.assertIn('No file specified', self.browser.contents)
+
+    def test_ZPythonScriptHTML_upload__with_file(self):
+        file_contents = b'print("hello")'
+        self.browser.getControl('file').add_file(
+             file_contents, 'text/plain', 'script.py')
+        self.browser.getControl('Upload File').click()
+
+        assert 'Saved changes.' in self.browser.contents

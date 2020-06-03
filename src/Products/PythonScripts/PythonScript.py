@@ -48,6 +48,7 @@ from Shared.DC.Scripts.Script import BindingsUI
 from Shared.DC.Scripts.Script import Script
 from Shared.DC.Scripts.Script import defaultBindings
 from zExceptions import Forbidden
+from ZPublisher.HTTPRequest import default_encoding
 
 
 try:
@@ -416,10 +417,6 @@ class PythonScript(Script, Historical, Cacheable):
         self.dav__init(REQUEST, RESPONSE)
         self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
         new_body = REQUEST.get('BODY', '')
-        if six.PY3 and isinstance(new_body, bytes):
-            new_body = new_body.decode('UTF-8')
-        elif six.PY2 and not isinstance(new_body, bytes):
-            new_body = new_body.encode('UTF-8')
         self.write(new_body)
         RESPONSE.setStatus(204)
         return RESPONSE
@@ -433,6 +430,11 @@ class PythonScript(Script, Historical, Cacheable):
         mdata = self._metadata_map()
         bindmap = self.getBindingAssignments().getAssignedNames()
         bup = 0
+
+        if six.PY3 and isinstance(text, bytes):
+            text = text.decode(default_encoding)
+        elif six.PY2 and not isinstance(text, bytes):
+            text = text.encode(default_encoding)
 
         st = 0
         try:

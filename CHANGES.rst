@@ -3,6 +3,8 @@ Changelog
 
 4.12 (unreleased)
 -----------------
+- fix ``TypeError`` when updating an existing script from a file
+  (`#43 <https://github.com/zopefoundation/Products.PythonScripts/issues/43>`_)
 
 
 4.11 (2020-02-11)
