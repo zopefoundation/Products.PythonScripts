@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.12 (unreleased)
+4.12 (2020-06-03)
 -----------------
 
 - add a ``file`` parameter to factory function ``manage_addPythonScript``
