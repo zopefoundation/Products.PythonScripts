@@ -64,8 +64,8 @@ class PythonScriptTestBase(unittest.TestCase):
 
     def setUp(self):
         from AccessControl import ModuleSecurityInfo
-        from AccessControl.SecurityInfo import _moduleSecurity
         from AccessControl.SecurityInfo import _appliedModuleSecurity
+        from AccessControl.SecurityInfo import _moduleSecurity
         self._ms_before = _moduleSecurity.copy()
         self._ams_before = _appliedModuleSecurity.copy()
         ModuleSecurityInfo('string').declarePublic('split')  # noqa: D001
@@ -73,8 +73,8 @@ class PythonScriptTestBase(unittest.TestCase):
         newSecurityManager(None, None)
 
     def tearDown(self):
-        from AccessControl.SecurityInfo import _moduleSecurity
         from AccessControl.SecurityInfo import _appliedModuleSecurity
+        from AccessControl.SecurityInfo import _moduleSecurity
         noSecurityManager()
         _moduleSecurity.clear()
         _moduleSecurity.update(self._ms_before)

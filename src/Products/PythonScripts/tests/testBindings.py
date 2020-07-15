@@ -107,8 +107,8 @@ class TestBindings(unittest.TestCase):
         self.connection = self.db.open()
 
     def tearDown(self):
-        from Testing.ZODButil import cleanDB
         from AccessControl.SecurityManagement import noSecurityManager
+        from Testing.ZODButil import cleanDB
         noSecurityManager()
         transaction.abort()
         self.connection.close()
@@ -189,8 +189,8 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(ps(), 1)
 
     def test_bound_used_container(self):
-        from AccessControl.SecurityManagement import newSecurityManager
         from AccessControl import Unauthorized
+        from AccessControl.SecurityManagement import newSecurityManager
         newSecurityManager(None, UnderprivilegedUser())
         root = self._makeTree()
         guarded = root._getOb('guarded')
@@ -241,8 +241,8 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(ps(), 1)
 
     def test_bound_used_context(self):
-        from AccessControl.SecurityManagement import newSecurityManager
         from AccessControl import Unauthorized
+        from AccessControl.SecurityManagement import newSecurityManager
         newSecurityManager(None, UnderprivilegedUser())
         root = self._makeTree()
         guarded = root._getOb('guarded')
@@ -303,8 +303,8 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(boundless_ps(), 42)
 
     def test_bound_used_context_method_w_roles(self):
-        from AccessControl.SecurityManagement import newSecurityManager
         from AccessControl import Unauthorized
+        from AccessControl.SecurityManagement import newSecurityManager
         newSecurityManager(None, UnderprivilegedUser())
         root = self._makeTree()
         guarded = root._getOb('guarded')
