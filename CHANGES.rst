@@ -4,6 +4,8 @@ Changelog
 4.12 (unreleased)
 -----------------
 
+- update configuration for version 5 of ``isort``
+
 - add a ``file`` parameter to factory function ``manage_addPythonScript``
   (`#45 <https://github.com/zopefoundation/Products.PythonScripts/issues/45>`_)
 
