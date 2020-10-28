@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/zopefoundation/Products.PythonScripts.svg?branch=master
-   :target: https://travis-ci.org/zopefoundation/Products.PythonScripts
+.. image:: https://travis-ci.com/zopefoundation/Products.PythonScripts.svg?branch=master
+   :target: https://travis-ci.com/zopefoundation/Products.PythonScripts
 
 .. image:: https://coveralls.io/repos/github/zopefoundation/Products.PythonScripts/badge.svg?branch=master
    :target: https://coveralls.io/github/zopefoundation/Products.PythonScripts?branch=master
