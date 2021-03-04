@@ -1,8 +1,16 @@
+# Generated from:
+# https://github.com/zopefoundation/meta/tree/master/config/zope-product
 include *.rst
 include *.txt
+include buildout.cfg
 include tox.ini
 
-recursive-include src *
-
-global-exclude *.pyc
-global-exclude *.pyo
+recursive-include src *.pt
+recursive-include src *.py
+recursive-include src *.rst
+recursive-include src *.txt
+recursive-include src *.zcml
+include buildout4.cfg
+include src/Products/PythonScripts/www/default_content
+recursive-include src *.ps
+recursive-include src *.dtml
