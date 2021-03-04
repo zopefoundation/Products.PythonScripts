@@ -140,8 +140,7 @@ class PythonScript(Script, Historical, Cacheable):
                 'Following names are not allowed as identifiers, as they'
                 'have a special meaning for PythonScript: '
                 '%s.'
-                'Please choose another name.' % ', '.join(bind_names),
-                )
+                'Please choose another name.' % ', '.join(bind_names))
         self.id = id
         self._makeFunction()
 
