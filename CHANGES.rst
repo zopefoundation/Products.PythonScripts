@@ -4,6 +4,8 @@ Changelog
 4.13 (unreleased)
 -----------------
 
+- add support for Python 3.9
+
 - update configuration for version 5 of ``isort``
 
 
