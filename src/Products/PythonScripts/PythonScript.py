@@ -37,7 +37,6 @@ from AccessControl.ZopeGuards import get_safe_globals
 from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_parent
 from App.Common import package_home
-from App.Dialogs import MessageDialog
 from App.special_dtml import DTMLFile
 from OFS.Cache import Cacheable
 from OFS.History import Historical
@@ -398,15 +397,16 @@ class PythonScript(Script, Historical, Cacheable):
     @requestmethod('POST')
     def manage_proxy(self, roles=(), REQUEST=None):
         """Change Proxy Roles"""
-        self._validateProxy(roles)
-        self._validateProxy()
+        user = getSecurityManager().getUser()
+        if 'Manager' not in user.getRolesInContext(self):
+            self._validateProxy(roles)
+            self._validateProxy()
         self.ZCacheable_invalidate()
         self._proxy_roles = tuple(roles)
         if REQUEST:
-            return MessageDialog(
-                title='Success!',
-                message='Your changes have been saved',
-                action='manage_main')
+            msg = 'Proxy roles changed.'
+            return self.manage_proxyForm(manage_tabs_message=msg,
+                                         management_view='Proxy')
 
     security.declareProtected(  # NOQA: D001
         change_python_scripts,
