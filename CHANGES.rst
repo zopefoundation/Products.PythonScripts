@@ -4,6 +4,9 @@ Changelog
 4.13 (unreleased)
 -----------------
 
+- make sure "Manager" users can always modify proxy roles
+  (`#50 <https://github.com/zopefoundation/Products.PythonScripts/issues/50>`_)
+
 - add support for Python 3.9
 
 - update configuration for version 5 of ``isort``
