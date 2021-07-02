@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.13 (unreleased)
+4.13 (2021-07-02)
 -----------------
 
 - make sure "Manager" users can always modify proxy roles
