@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.com/zopefoundation/Products.PythonScripts.svg?branch=master
-   :target: https://travis-ci.com/zopefoundation/Products.PythonScripts
+.. image:: https://github.com/zopefoundation/Products.PythonScripts/actions/workflows/tests.yml/badge.svg
+   :target: https://github.com/zopefoundation/Products.PythonScripts/actions/workflows/tests.yml
 
 .. image:: https://coveralls.io/repos/github/zopefoundation/Products.PythonScripts/badge.svg?branch=master
    :target: https://coveralls.io/github/zopefoundation/Products.PythonScripts?branch=master
@@ -39,18 +39,18 @@ the risk of abuse.
 
 The easiest way to make modules available to Python scripts on
 your site is to create a new directory in your Products directory
-containing an `__init__.py` file. At Zope startup time, this
+containing an ``__init__.py`` file. At Zope startup time, this
 "product" will be imported, and any module assertions you make
-in the `__init__.py` will take effect. Here's how to do it:
+in the ``__init__.py`` will take effect. Here's how to do it:
 
 - In your Products directory (either in lib/python of your
   Zope installation or in the root of your Zope install,
   depending on your deployment model), create a new directory
   with a name like "GlobalModules".
 
-- In the new directory, create a file named `__init__.py`.
+- In the new directory, create a file named ``__init__.py``.
 
-- Edit the `__init__.py` file, and add calls to the 'allow_module'
+- Edit the ``__init__.py`` file, and add calls to the 'allow_module'
   function (located in the Products.PythonScripts.Utility module),
   passing the names of modules to be enabled for use by scripts.
   For example::

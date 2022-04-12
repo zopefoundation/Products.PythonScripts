@@ -4,45 +4,46 @@ Changelog
 4.14 (unreleased)
 -----------------
 
+- Add support for Python 3.10.
 
 4.13 (2021-07-02)
 -----------------
 
-- make sure "Manager" users can always modify proxy roles
+- Make sure "Manager" users can always modify proxy roles
   (`#50 <https://github.com/zopefoundation/Products.PythonScripts/issues/50>`_)
 
-- add support for Python 3.9
+- Add support for Python 3.9.
 
-- update configuration for version 5 of ``isort``
+- Update configuration for version 5 of ``isort``.
 
 
 4.12 (2020-06-03)
 -----------------
 
-- add a ``file`` parameter to factory function ``manage_addPythonScript``
+- Add a ``file`` parameter to factory function ``manage_addPythonScript``
   (`#45 <https://github.com/zopefoundation/Products.PythonScripts/issues/45>`_)
 
-- fix ``TypeError`` when updating an existing script from a file
+- Fix ``TypeError`` when updating an existing script from a file
   (`#43 <https://github.com/zopefoundation/Products.PythonScripts/issues/43>`_)
 
 
 4.11 (2020-02-11)
 -----------------
 
-- fix ``PUT`` issues with string encoding
+- Fix ``PUT`` issues with string encoding.
 
 
 4.10 (2020-02-11)
 -----------------
 
-- override ``manage_DAVget`` to get correct editable sources
+- Override ``manage_DAVget`` to get correct editable sources
   (`#40 <https://github.com/zopefoundation/Products.PythonScripts/issues/40>`_)
 
 
 4.9 (2019-10-09)
 ----------------
 
-- prevent ResourceWarning/Error by closing default contents file
+- Prevent ResourceWarning/Error by closing default contents file
   (`#39 <https://github.com/zopefoundation/Products.PythonScripts/issues/39>`_)
 
 
