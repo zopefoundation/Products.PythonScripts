@@ -9,6 +9,7 @@ include tox.ini
 recursive-include src *.py
 include buildout4.cfg
 include src/Products/PythonScripts/www/default_content
+recursive-include src *.pkl
 recursive-include src *.ps
 recursive-include src *.dtml
 recursive-include src *.zcml
