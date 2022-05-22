@@ -384,6 +384,23 @@ return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
         self.assertEqual(container.testing.body(), 'return 1\n')
         self.assertEqual(container.testing.params(), '')
 
+    def testCodeIntrospection(self):
+        script = self._newPS('##parameters=a="b"')
+
+        self.assertEqual(script.__code__.co_argcount, 1)
+        self.assertEqual(
+            script.__code__.co_varnames,
+            ('a',))
+        if six.PY2:
+            self.assertEqual(script.func_code.co_argcount, 1)
+            self.assertEqual(
+                script.func_code.co_varnames,
+                ('a',))
+
+        self.assertEqual(script.__defaults__, ('b',))
+        if six.PY2:
+            self.assertEqual(script.func_defaults, ('b',))
+
 
 class TestPythonScriptErrors(PythonScriptTestBase):
 
