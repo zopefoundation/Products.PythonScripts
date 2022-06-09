@@ -14,6 +14,7 @@ import codecs
 import contextlib
 import io
 import os
+import pickle
 import sys
 import unittest
 import warnings
@@ -383,6 +384,23 @@ return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
         self.assertEqual(container.testing.body(), 'return 1\n')
         self.assertEqual(container.testing.params(), '')
 
+    def testCodeIntrospection(self):
+        script = self._newPS('##parameters=a="b"')
+
+        self.assertEqual(script.__code__.co_argcount, 1)
+        self.assertEqual(
+            script.__code__.co_varnames,
+            ('a',))
+        if six.PY2:
+            self.assertEqual(script.func_code.co_argcount, 1)
+            self.assertEqual(
+                script.func_code.co_varnames,
+                ('a',))
+
+        self.assertEqual(script.__defaults__, ('b',))
+        if six.PY2:
+            self.assertEqual(script.func_defaults, ('b',))
+
 
 class TestPythonScriptErrors(PythonScriptTestBase):
 
@@ -606,3 +624,49 @@ class PythonScriptBrowserTests(FunctionalTestCase):
 
         # Cleanup
         noSecurityManager()
+
+
+class PythonScriptPickle(unittest.TestCase):
+
+    @unittest.skipIf(
+        six.PY3,
+        'Pickles from python2 can not be loaded on python3')
+    def test_load_old_zope_2_pickle_recompiles(self):
+        with open(os.path.join(HERE, 'tscripts', 'ps_2.13.2.pkl'), 'rb') as f:
+            script = pickle.load(f)
+        self.assertIsInstance(script, PythonScript)
+
+        self.assertEqual(
+            script.document_src(),
+            '## Script (Python) "test"\n'
+            '##bind container=container\n'
+            '##bind context=context\n'
+            '##bind namespace=\n'
+            '##bind script=script\n'
+            '##bind subpath=traverse_subpath\n'
+            '##parameters=Products_PythonScripts_version=\'2.13.2\'\n'
+            '##title=\n'
+            '##\n'
+            'return """This is an old script created with\n'
+            'Products.PythonScripts version %s\n'
+            'and Zope version 2.13.30 (on python 2.7)\n'
+            '""" % Products_PythonScripts_version\n')
+
+        self.assertEqual(script.__code__.co_argcount, 1)
+        self.assertEqual(
+            script.__code__.co_varnames,
+            ('Products_PythonScripts_version',))
+        self.assertEqual(script.func_code.co_argcount, 1)
+        self.assertEqual(
+            script.func_code.co_varnames,
+            ('Products_PythonScripts_version',))
+        self.assertEqual(script.__defaults__, ('2.13.2',))
+        self.assertEqual(script.func_defaults, ('2.13.2',))
+
+        container = makerequest(DummyFolder('container'))
+        container.REQUEST.form = {}
+        self.assertEqual(
+            script.__of__(container)(),
+            'This is an old script created with\n'
+            'Products.PythonScripts version 2.13.2\n'
+            'and Zope version 2.13.30 (on python 2.7)\n')
