@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/zope-product
 [meta]
 template = "zope-product"
-commit-id = "9a5db8c650c45a439db06e3a7b2b86318006659d"
+commit-id = "ee0a2ad7b6d4ce76a898131869cac3578202d80c"
 
 [python]
 with-pypy = false
@@ -18,8 +18,9 @@ fail-under = 75
 additional-rules = [
     "include buildout4.cfg",
     "include src/Products/PythonScripts/www/default_content",
-    "recursive-include src *.ps",
     "recursive-include src *.dtml",
+    "recursive-include src *.pkl",
+    "recursive-include src *.ps",
     "recursive-include src *.zcml",
     ]
 
