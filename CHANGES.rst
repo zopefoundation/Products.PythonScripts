@@ -6,6 +6,9 @@ Changelog
 
 - Add support for Python 3.10.
 
+- Remove unused classes ``SecurityManager`` and ``RivilegedUser`` from
+  ``.tests.testBindings``.
+
 4.13 (2021-07-02)
 -----------------
 
