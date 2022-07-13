@@ -1,7 +1,7 @@
 Changelog
 =========
 
-4.14 (unreleased)
+4.14 (2022-07-13)
 -----------------
 
 - Add support for Python 3.10.
