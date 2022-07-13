@@ -21,39 +21,6 @@ from OFS.Folder import Folder
 from OFS.ObjectManager import ObjectManager
 
 
-class SecurityManager(object):
-
-    def __init__(self, reject=0):
-        self.calls = []
-        self.reject = reject
-
-    def validate(self, *args):
-        from AccessControl import Unauthorized
-        self.calls.append(('validate', args))
-        if self.reject:
-            raise Unauthorized
-        return 1
-
-    def validateValue(self, *args):
-        from AccessControl import Unauthorized
-        self.calls.append(('validateValue', args))
-        if self.reject:
-            raise Unauthorized
-        return 1
-
-    def checkPermission(self, *args):
-        self.calls.append(('checkPermission', args))
-        return not self.reject
-
-    def addContext(self, *args):
-        self.calls.append(('addContext', args))
-        return 1
-
-    def removeContext(self, *args):
-        self.calls.append(('removeContext', args))
-        return 1
-
-
 class UnderprivilegedUser(object):
 
     def getId(self):
@@ -61,15 +28,6 @@ class UnderprivilegedUser(object):
 
     def allowed(self, object, object_roles=None):
         return 0
-
-
-class RivilegedUser(object):
-
-    def getId(self):
-        return 'privileged'
-
-    def allowed(self, object, object_roles=None):
-        return 1
 
 
 class FauxRoot(ObjectManager):
