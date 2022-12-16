@@ -1,10 +1,12 @@
 Changelog
 =========
 
-4.14 (unreleased)
+4.14 (2022-12-16)
 -----------------
 
-- Add support for Python 3.10.
+- Fix insidious buildout configuration bug for tests against Zope 4.
+
+- Add support for Python 3.10 and 3.11.
 
 - Remove unused classes ``SecurityManager`` and ``RivilegedUser`` from
   ``.tests.testBindings``.

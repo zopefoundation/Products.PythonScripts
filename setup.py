@@ -17,7 +17,7 @@ from setuptools import setup
 
 
 setup(name='Products.PythonScripts',
-      version='4.14.dev0',
+      version='4.14',
       url='https://github.com/zopefoundation/Products.PythonScripts',
       project_urls={
           'Issue Tracker': ('https://github.com/zopefoundation/'
@@ -40,6 +40,7 @@ setup(name='Products.PythonScripts',
           'Environment :: Web Environment',
           'Framework :: Zope',
           'Framework :: Zope :: 4',
+          'Framework :: Zope :: 5',
           'License :: OSI Approved :: Zope Public License',
           'Operating System :: OS Independent',
           'Programming Language :: Python',
@@ -52,6 +53,7 @@ setup(name='Products.PythonScripts',
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
           'Programming Language :: Python :: 3.10',
+          'Programming Language :: Python :: 3.11',
           'Programming Language :: Python :: Implementation :: CPython',
       ],
       python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*',
