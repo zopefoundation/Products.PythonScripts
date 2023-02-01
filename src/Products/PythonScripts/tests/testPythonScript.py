@@ -14,13 +14,10 @@ import codecs
 import contextlib
 import io
 import os
-import pickle
 import sys
 import unittest
 import warnings
-
-import six
-from six.moves.urllib.error import HTTPError
+from urllib.error import HTTPError
 
 import zExceptions
 import Zope2
@@ -41,7 +38,7 @@ HERE = os.path.dirname(__file__)
 @contextlib.contextmanager
 def warning_interceptor():
     old_stderr = sys.stderr
-    sys.stderr = stream = six.StringIO()
+    sys.stderr = stream = io.StringIO()
     try:
         yield stream
     finally:
@@ -53,7 +50,7 @@ def warning_interceptor():
 
 def readf(name):
     path = os.path.join(HERE, 'tscripts', '%s.ps' % name)
-    with open(path, 'r') as f:
+    with open(path) as f:
         return f.read()
 
 
@@ -137,7 +134,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         import string
         params = string.ascii_letters[:26]
         sparams = ','.join(params)
-        ps = self._newPS('##parameters=%s\nreturn %s' % (sparams, sparams))
+        ps = self._newPS(f'##parameters={sparams}\nreturn {sparams}')
         res = ps(*params)
         self.assertEqual(res, tuple(params))
 
@@ -203,8 +200,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertEqual(res, 'a\n')
 
     def testComplexPrint(self):
-        script = 'complex_print_py%s' % sys.version_info.major
-        res = self._filePS(script)()
+        res = self._filePS('complex_print')()
         self.assertEqual(res, 'double\ndouble\nx: 1\ny: 0 1 2\n\n')
 
     def testNSBind(self):
@@ -220,17 +216,11 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertTrue(res)
 
     def testGetSize(self):
-        script = 'complex_print_py%s' % sys.version_info.major
-        f = self._filePS(script)
+        f = self._filePS('complex_print')
         self.assertEqual(f.get_size(), len(f.read()))
 
     def testBuiltinSet(self):
         res = self._newPS('return len(set([1, 2, 3, 1]))')()
-        self.assertEqual(res, 3)
-
-    @unittest.skipIf(six.PY3, 'sets module does not exist in python3')
-    def testSetModule(self):
-        res = self._newPS('from sets import Set; return len(Set([1,2,3]))')()
         self.assertEqual(res, 3)
 
     def testDateTime(self):
@@ -255,7 +245,7 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertEqual(ps.title, 'This is a title')
         self.assertEqual(ps.body(), 'print(foo+bar+baz)\nreturn printed\n')
         self.assertEqual(ps.params(), 'foo, bar, baz=1')
-        new_body = u"""\
+        new_body = """\
 ## Script (Python) "complete"
 ##bind container=container
 ##bind context=context
@@ -271,12 +261,7 @@ return \xe4\xe9\xee\xf6\xfc
         ps._filepath = 'fake'
         ps.PUT(ps.REQUEST, ps.REQUEST.RESPONSE)
         self.assertEqual(ps.title, 'New Title')
-        if six.PY3:
-            self.assertEqual(ps.body(), 'return \xe4\xe9\xee\xf6\xfc\n')
-        else:
-            self.assertEqual(
-                ps.body(),
-                'return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc\n')
+        self.assertEqual(ps.body(), 'return \xe4\xe9\xee\xf6\xfc\n')
         self.assertEqual(ps.params(), 'oops')
 
     def test_PUT_bytes(self):
@@ -300,12 +285,7 @@ return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
         ps._filepath = 'fake'
         ps.PUT(ps.REQUEST, ps.REQUEST.RESPONSE)
         self.assertEqual(ps.title, 'New Title')
-        if six.PY3:
-            self.assertEqual(ps.body(), 'return \xe4\xe9\xee\xf6\xfc\n')
-        else:
-            self.assertEqual(
-                ps.body(),
-                'return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc\n')
+        self.assertEqual(ps.body(), 'return \xe4\xe9\xee\xf6\xfc\n')
         self.assertEqual(ps.params(), 'oops')
 
     def test_write(self):
@@ -314,7 +294,7 @@ return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
         ps.write(b'return 1')
         self.assertEqual(ps.body(), 'return 1\n')
 
-        ps.write(u'return 1')
+        ps.write('return 1')
         self.assertEqual(ps.body(), 'return 1\n')
 
     def test_factory(self):
@@ -391,15 +371,7 @@ return \xc3\xa4\xc3\xa9\xc3\xae\xc3\xb6\xc3\xbc
         self.assertEqual(
             script.__code__.co_varnames,
             ('a',))
-        if six.PY2:
-            self.assertEqual(script.func_code.co_argcount, 1)
-            self.assertEqual(
-                script.func_code.co_varnames,
-                ('a',))
-
         self.assertEqual(script.__defaults__, ('b',))
-        if six.PY2:
-            self.assertEqual(script.func_defaults, ('b',))
 
 
 class TestPythonScriptErrors(PythonScriptTestBase):
@@ -479,10 +451,7 @@ class TestPythonScriptGlobals(PythonScriptTestBase):
 
     def test__name__(self):
         f = self._filePS('class.__name__')
-        if six.PY3:
-            class_name = "'script.class.__name__.<locals>.foo'>"
-        else:
-            class_name = "'script.foo'>"
+        class_name = "'script.class.__name__.<locals>.foo'>"
 
         self.assertEqual(f(), (class_name, "'string'"))
 
@@ -504,11 +473,8 @@ class TestPythonScriptGlobals(PythonScriptTestBase):
 class PythonScriptInterfaceConformanceTests(unittest.TestCase):
 
     def test_class_conforms_to_IWriteLock(self):
+        from OFS.interfaces import IWriteLock
         from zope.interface.verify import verifyClass
-        try:
-            from OFS.interfaces import IWriteLock
-        except ImportError:
-            from webdav.interfaces import IWriteLock
         verifyClass(IWriteLock, PythonScript)
 
 
@@ -517,7 +483,7 @@ class PythonScriptBrowserTests(FunctionalTestCase):
 
     def setUp(self):
         from Products.PythonScripts.PythonScript import manage_addPythonScript
-        super(PythonScriptBrowserTests, self).setUp()
+        super().setUp()
 
         Zope2.App.zcml.load_site(force=True)
 
@@ -526,10 +492,8 @@ class PythonScriptBrowserTests(FunctionalTestCase):
         manage_addPythonScript(self.app, 'py_script')
 
         self.browser = Browser()
-        self.browser.addHeader(
-            'Authorization',
-            'basic {}'.format(codecs.encode(  # noqa: P101
-                b'manager:manager_pass', 'base64').decode()))
+        pw = codecs.encode(b'manager:manager_pass', 'base64').decode()
+        self.browser.addHeader('Authorization', f'basic {pw}')
         self.browser.open('http://localhost/py_script/manage_main')
 
     def test_ZPythonScriptHTML_upload__no_file(self):
@@ -624,49 +588,3 @@ class PythonScriptBrowserTests(FunctionalTestCase):
 
         # Cleanup
         noSecurityManager()
-
-
-class PythonScriptPickle(unittest.TestCase):
-
-    @unittest.skipIf(
-        six.PY3,
-        'Pickles from python2 can not be loaded on python3')
-    def test_load_old_zope_2_pickle_recompiles(self):
-        with open(os.path.join(HERE, 'tscripts', 'ps_2.13.2.pkl'), 'rb') as f:
-            script = pickle.load(f)
-        self.assertIsInstance(script, PythonScript)
-
-        self.assertEqual(
-            script.document_src(),
-            '## Script (Python) "test"\n'
-            '##bind container=container\n'
-            '##bind context=context\n'
-            '##bind namespace=\n'
-            '##bind script=script\n'
-            '##bind subpath=traverse_subpath\n'
-            '##parameters=Products_PythonScripts_version=\'2.13.2\'\n'
-            '##title=\n'
-            '##\n'
-            'return """This is an old script created with\n'
-            'Products.PythonScripts version %s\n'
-            'and Zope version 2.13.30 (on python 2.7)\n'
-            '""" % Products_PythonScripts_version\n')
-
-        self.assertEqual(script.__code__.co_argcount, 1)
-        self.assertEqual(
-            script.__code__.co_varnames,
-            ('Products_PythonScripts_version',))
-        self.assertEqual(script.func_code.co_argcount, 1)
-        self.assertEqual(
-            script.func_code.co_varnames,
-            ('Products_PythonScripts_version',))
-        self.assertEqual(script.__defaults__, ('2.13.2',))
-        self.assertEqual(script.func_defaults, ('2.13.2',))
-
-        container = makerequest(DummyFolder('container'))
-        container.REQUEST.form = {}
-        self.assertEqual(
-            script.__of__(container)(),
-            'This is an old script created with\n'
-            'Products.PythonScripts version 2.13.2\n'
-            'and Zope version 2.13.30 (on python 2.7)\n')

@@ -16,15 +16,14 @@ This product provides support for Script objects containing restricted
 Python code.
 """
 
+import importlib.util
 import marshal
 import os
 import re
 import sys
 import types
 from logging import getLogger
-
-import six
-from six.moves.urllib.parse import quote
+from urllib.parse import quote
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.Permissions import change_proxy_roles
@@ -47,24 +46,14 @@ from Shared.DC.Scripts.Script import BindingsUI
 from Shared.DC.Scripts.Script import Script
 from Shared.DC.Scripts.Script import defaultBindings
 from zExceptions import Forbidden
+from zExceptions import ResourceLockedError
 from ZPublisher.HTTPRequest import default_encoding
 
-
-try:
-    from zExceptions import ResourceLockedError
-except ImportError:
-    from webdav.Lockable import ResourceLockedError
 
 LOG = getLogger('PythonScripts')
 
 # Track the Python bytecode version
-try:
-    import importlib.util
-    Python_magic = importlib.util.MAGIC_NUMBER
-except ImportError:  # Python 2
-    import imp
-    Python_magic = imp.get_magic()
-    del imp
+Python_magic = importlib.util.MAGIC_NUMBER
 
 # This should only be incremented to force recompilation.
 Script_magic = 4
@@ -103,7 +92,7 @@ def manage_addPythonScript(self, id, title='', file=None, REQUEST=None,
         except Exception:
             u = REQUEST['URL1']
         if submit == 'Add and Edit':
-            u = '%s/%s' % (u, quote(id))
+            u = f'{u}/{quote(id)}'
         REQUEST.RESPONSE.redirect(u + '/manage_main')
     return ''
 
@@ -288,7 +277,7 @@ class PythonScript(Script, Historical, Cacheable):
         safe_globals['__name__'] = 'script'
 
         safe_locals = {}
-        six.exec_(code, safe_globals, safe_locals)
+        exec(code, safe_globals, safe_locals)
         func = list(safe_locals.values())[0]
         self._v_ft = (func.__code__, safe_globals, func.__defaults__ or ())
         return func
@@ -332,7 +321,7 @@ class PythonScript(Script, Historical, Cacheable):
         if ft is None:
             __traceback_supplement__ = (
                 PythonScriptTracebackSupplement, self)
-            raise RuntimeError('%s %s has errors.' % (self.meta_type, self.id))
+            raise RuntimeError(f'{self.meta_type} {self.id} has errors.')
 
         function_code, safe_globals, function_argument_definitions = ft
         safe_globals = safe_globals.copy()
@@ -433,10 +422,8 @@ class PythonScript(Script, Historical, Cacheable):
         bindmap = self.getBindingAssignments().getAssignedNames()
         bup = 0
 
-        if six.PY3 and isinstance(text, bytes):
+        if isinstance(text, bytes):
             text = text.decode(default_encoding)
-        elif six.PY2 and not isinstance(text, bytes):
-            text = text.encode(default_encoding)
 
         st = 0
         try:
@@ -520,7 +507,7 @@ class PythonScript(Script, Historical, Cacheable):
         else:
             prefix = '##'
 
-        hlines = ['%s %s "%s"' % (prefix, self.meta_type, self.id)]
+        hlines = [f'{prefix} {self.meta_type} "{self.id}"']
         mm = sorted(self._metadata_map().items())
         for kv in mm:
             hlines.append('%s=%s' % kv)
@@ -553,7 +540,7 @@ class PythonScript(Script, Historical, Cacheable):
     @security.protected(view_management_screens)
     def PrincipiaSearchSource(self):
         """Support for searching - the document's contents are searched."""
-        return '%s\n%s' % (self._params, self._body)
+        return f'{self._params}\n{self._body}'
 
     @security.protected(view_management_screens)
     def document_src(self, REQUEST=None, RESPONSE=None):

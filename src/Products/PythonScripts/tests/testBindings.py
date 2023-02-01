@@ -21,7 +21,7 @@ from OFS.Folder import Folder
 from OFS.ObjectManager import ObjectManager
 
 
-class UnderprivilegedUser(object):
+class UnderprivilegedUser:
 
     def getId(self):
         return 'underprivileged'
