@@ -331,8 +331,28 @@ class PythonScript(Script, Historical, Cacheable):
             PythonScriptTracebackSupplement, self, -1)
         safe_globals['__file__'] = getattr(
             self, '_filepath', None) or self.get_filepath()
+
+        '''
         function = types.FunctionType(
             function_code, safe_globals, None, function_argument_definitions)
+        '''
+        hacked_globals = globals()
+
+        hacked_globals['_getattr_'] = getattr
+
+        needed = [
+            '_print_',
+            '_write_',
+            '_getitem_',
+            '_getiter_',
+            'container',
+            'context',
+        ]
+        for item in needed:
+            hacked_globals[item] = safe_globals[item]
+
+        function = types.FunctionType(
+            function_code, hacked_globals, None, function_argument_definitions)
 
         try:
             result = function(*args, **kw)
