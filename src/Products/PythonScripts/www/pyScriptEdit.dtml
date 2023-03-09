@@ -16,7 +16,7 @@
 			<div class="form-group row ">
 				<label for="params" class="form-label col-sm-3 col-md-2">Parameter List</label>
 				<div class="col-sm-9 col-md-10">
-					<input id="params" class="form-control" type="text" name="params" value="&dtml-params;" />
+					<input id="params" class="form-control code" type="text" name="params" value="&dtml-params;" />
 				</div>
 			</div>
 		</dtml-with>
