@@ -4,6 +4,8 @@ Changelog
 5.1 (unreleased)
 ----------------
 
+- Fix behavior when uploading no file in ``Zope >= 5.8.1``.
+
 
 5.0 (2023-02-01)
 ----------------
