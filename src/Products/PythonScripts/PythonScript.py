@@ -16,7 +16,9 @@ This product provides support for Script objects containing restricted
 Python code.
 """
 
+import importlib.abc
 import importlib.util
+import linecache
 import marshal
 import os
 import re
@@ -56,7 +58,7 @@ LOG = getLogger('PythonScripts')
 Python_magic = importlib.util.MAGIC_NUMBER
 
 # This should only be incremented to force recompilation.
-Script_magic = 4
+Script_magic = 5
 _log_complaint = (
     'Some of your Scripts have stale code cached.  Since Zope cannot'
     ' use this code, startup will be slightly slower until these Scripts'
@@ -95,6 +97,16 @@ def manage_addPythonScript(self, id, title='', file=None, REQUEST=None,
             u = f'{u}/{quote(id)}'
         REQUEST.RESPONSE.redirect(u + '/manage_main')
     return ''
+
+
+class PythonScriptLoader(importlib.abc.Loader):
+    """PEP302 loader to display source code in tracebacks
+    """
+    def __init__(self, source):
+        self._source = source
+
+    def get_source(self, name):
+        return self._source
 
 
 class PythonScript(Script, Historical, Cacheable):
@@ -234,7 +246,7 @@ class PythonScript(Script, Historical, Cacheable):
             self._params,
             body=self._body or 'pass',
             name=self.id,
-            filename=self.meta_type,
+            filename=getattr(self, '_filepath', None) or self.get_filepath(),
             globalize=bind_names)
 
         code = compile_result.code
@@ -261,6 +273,7 @@ class PythonScript(Script, Historical, Cacheable):
                                fc.co_argcount)
         self.Python_magic = Python_magic
         self.Script_magic = Script_magic
+        linecache.clearcache()
         self._v_change = 0
 
     def _newfun(self, code):
@@ -331,6 +344,8 @@ class PythonScript(Script, Historical, Cacheable):
             PythonScriptTracebackSupplement, self, -1)
         safe_globals['__file__'] = getattr(
             self, '_filepath', None) or self.get_filepath()
+        safe_globals['__loader__'] = PythonScriptLoader(self._body)
+
         function = types.FunctionType(
             function_code, safe_globals, None, function_argument_definitions)
 
