@@ -10,6 +10,8 @@ Changelog
 
 - Drop support for Python 3.7.
 
+- Show Python Scripts source code in tracebacks.
+
 
 5.0 (2023-02-01)
 ----------------
