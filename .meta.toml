@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/zope-product
 [meta]
 template = "zope-product"
-commit-id = "e5c611fb"
+commit-id = "4dc0484e"
 
 [python]
 with-pypy = false
@@ -10,6 +10,7 @@ with-sphinx-doctests = false
 with-windows = false
 with-future-python = false
 with-macos = false
+with-docs = false
 
 [coverage]
 fail-under = 83
