@@ -15,6 +15,7 @@ import contextlib
 import io
 import os
 import sys
+import traceback
 import unittest
 import warnings
 from urllib.error import HTTPError
@@ -241,7 +242,8 @@ class TestPythonScriptNoAq(PythonScriptTestBase):
         self.assertEqual(ps.read(), ps.manage_DAVget())
 
     def test_PUT_native_string(self):
-        ps = makerequest(self._filePS('complete'))
+        container = DummyFolder('container')
+        ps = makerequest(self._filePS('complete').__of__(container))
         self.assertEqual(ps.title, 'This is a title')
         self.assertEqual(ps.body(), 'print(foo+bar+baz)\nreturn printed\n')
         self.assertEqual(ps.params(), 'foo, bar, baz=1')
@@ -265,7 +267,8 @@ return \xe4\xe9\xee\xf6\xfc
         self.assertEqual(ps.params(), 'oops')
 
     def test_PUT_bytes(self):
-        ps = makerequest(self._filePS('complete'))
+        container = DummyFolder('container')
+        ps = makerequest(self._filePS('complete').__of__(container))
         self.assertEqual(ps.title, 'This is a title')
         self.assertEqual(ps.body(), 'print(foo+bar+baz)\nreturn printed\n')
         self.assertEqual(ps.params(), 'foo, bar, baz=1')
@@ -588,3 +591,46 @@ class PythonScriptBrowserTests(FunctionalTestCase):
 
         # Cleanup
         noSecurityManager()
+
+
+class TestTraceback(FunctionalTestCase, PythonScriptTestBase):
+
+    def _format_exception(self):
+        return "".join(traceback.format_exception(*sys.exc_info()))
+
+    def test_source_code_in_traceback(self):
+        ps = self._newPS("1 / 0")
+        try:
+            ps()
+        except ZeroDivisionError:
+            formatted_exception = self._format_exception()
+        self.assertIn("1 / 0", formatted_exception)
+
+        ps.write("2 / 0")
+        try:
+            ps()
+        except ZeroDivisionError:
+            formatted_exception = self._format_exception()
+        self.assertIn("2 / 0", formatted_exception)
+
+    def test_multiple_scripts_in_traceback(self):
+        from Products.PythonScripts.PythonScript import manage_addPythonScript
+
+        script1_body = "container.script2()"
+        manage_addPythonScript(
+            self.folder,
+            "script1",
+            file=script1_body,
+        )
+        script2_body = "1 / 0"
+        manage_addPythonScript(
+            self.folder,
+            "script2",
+            file=script2_body,
+        )
+        try:
+            self.folder.script1()
+        except ZeroDivisionError:
+            formatted_exception = self._format_exception()
+        self.assertIn(script1_body, formatted_exception)
+        self.assertIn(script2_body, formatted_exception)
