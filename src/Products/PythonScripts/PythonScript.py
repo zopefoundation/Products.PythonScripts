@@ -102,6 +102,7 @@ def manage_addPythonScript(self, id, title='', file=None, REQUEST=None,
 class PythonScriptLoader(importlib.abc.Loader):
     """PEP302 loader to display source code in tracebacks
     """
+
     def __init__(self, source):
         self._source = source
 
