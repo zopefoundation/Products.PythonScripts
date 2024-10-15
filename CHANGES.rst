@@ -6,7 +6,7 @@ Changelog
 
 - Fix behavior when uploading no file in ``Zope >= 5.8.1``.
 
-- Add support for Python 3.12.
+- Add support for Python 3.12 and 3.13
 
 - Drop support for Python 3.7.
 
