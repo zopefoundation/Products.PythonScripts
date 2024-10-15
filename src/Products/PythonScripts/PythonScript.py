@@ -556,6 +556,7 @@ InitializeClass(PythonScript)
 
 class PythonScriptTracebackSupplement:
     """Implementation of ITracebackSupplement"""
+
     def __init__(self, script, line=0):
         self.object = script
         # If line is set to -1, it means to use tb_lineno.
