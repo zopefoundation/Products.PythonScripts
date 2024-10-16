@@ -11,7 +11,7 @@ Changelog
 - Drop support for Python 3.7.
 
 - Show Python Scripts source code in tracebacks.
-
+  `#64 <https://github.com/zopefoundation/Products.PythonScripts/issues/64>`_
 
 5.0 (2023-02-01)
 ----------------
