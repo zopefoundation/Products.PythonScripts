@@ -12,7 +12,6 @@
 #
 ##############################################################################
 
-from setuptools import find_packages
 from setuptools import setup
 
 
@@ -32,9 +31,6 @@ setup(name='Products.PythonScripts',
       author_email='zope-dev@zope.dev',
       long_description=('{}\n{}'.format(open('README.rst').read(),
                                         open('CHANGES.rst').read())),
-      packages=find_packages('src'),
-      namespace_packages=['Products'],
-      package_dir={'': 'src'},
       classifiers=[
           'Development Status :: 6 - Mature',
           'Environment :: Web Environment',
@@ -44,16 +40,15 @@ setup(name='Products.PythonScripts',
           'Operating System :: OS Independent',
           'Programming Language :: Python',
           'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.9',
           'Programming Language :: Python :: 3.10',
           'Programming Language :: Python :: 3.11',
           'Programming Language :: Python :: 3.12',
           'Programming Language :: Python :: 3.13',
+          'Programming Language :: Python :: 3.14',
           'Programming Language :: Python :: Implementation :: CPython',
       ],
-      python_requires='>=3.9',
+      python_requires='>=3.10',
       install_requires=[
-          'setuptools',
           'AccessControl',
           'Acquisition',
           'DateTime',
@@ -62,8 +57,6 @@ setup(name='Products.PythonScripts',
           'zExceptions',
           'Zope >= 4.1.2',
       ],
-      include_package_data=True,
-      zip_safe=False,
       entry_points={
           'zodbupdate.decode': [
               'decodes = Products.PythonScripts:zodbupdate_decode_dict',
