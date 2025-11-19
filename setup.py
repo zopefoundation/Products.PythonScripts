@@ -62,4 +62,5 @@ setup(name='Products.PythonScripts',
               'decodes = Products.PythonScripts:zodbupdate_decode_dict',
           ],
       },
+      include_package_data=True,
       )
