@@ -43,7 +43,7 @@ def initialize(context):
         icon='www/pyscript.gif',
     )
 
-    global _m
+    global _m  # noqa: F824
     _m['recompile'] = recompile
     _m['recompile__roles__'] = ('Manager',)
 
