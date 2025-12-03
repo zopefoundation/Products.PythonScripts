@@ -43,7 +43,7 @@ dependencies = [
     "DocumentTemplate",
     "RestrictedPython >= 4.0b5",
     "zExceptions",
-    "Zope >= 4.1.2",
+    "Zope >= 5",
 ]
 
 [project.entry-points."zodbupdate.decode"]
