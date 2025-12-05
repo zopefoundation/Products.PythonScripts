@@ -1,13 +1,57 @@
-# 
-# Generated from:
-# https://github.com/zopefoundation/meta/tree/master/config/zope-product
-
+# Generated with zope.meta (https://zopemeta.readthedocs.io/) from:
+# https://github.com/zopefoundation/meta/tree/master/src/zope/meta/zope-product
 [build-system]
 requires = [
     "setuptools >= 78.1.1,< 81",
     "wheel",
 ]
 build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "Products.PythonScripts"
+version = "5.3.dev0"
+description = "Provides support for restricted execution of Python scripts in Zope."
+license = "ZPL-2.1"
+classifiers = [
+    "Development Status :: 6 - Mature",
+    "Environment :: Web Environment",
+    "Framework :: Zope",
+    "Framework :: Zope :: 5",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+dynamic = ["readme"]
+requires-python = ">=3.10"
+authors = [
+    {name = "Zope Foundation and contributors",email = "zope-dev@zope.dev"},
+]
+maintainers = [
+    {name = "Plone Foundation and contributors",email = "zope-dev@zope.dev"},
+]
+dependencies = [
+    "AccessControl",
+    "Acquisition",
+    "DateTime",
+    "DocumentTemplate",
+    "RestrictedPython >= 4.0b5",
+    "zExceptions",
+    "Zope >= 5",
+]
+
+[project.entry-points."zodbupdate.decode"]
+decodes = "Products.PythonScripts:zodbupdate_decode_dict"
+
+[project.urls]
+Source = "https://github.com/zopefoundation/Products.PythonScripts"
+Issues = "https://github.com/zopefoundation/Products.PythonScripts/issues"
 
 [tool.coverage.run]
 branch = true
@@ -31,3 +75,7 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "parts/htmlcov"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "CHANGES.rst"]}
+
