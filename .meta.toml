@@ -27,3 +27,6 @@ additional-rules = [
 
 [tox]
 use-flake8 = true
+
+[pypi]
+trusted-publishing = true

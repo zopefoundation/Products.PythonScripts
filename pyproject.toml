@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Products.PythonScripts"
-version = "5.3"
+version = "5.3.1"
 description = "Provides support for restricted execution of Python scripts in Zope."
 license = "ZPL-2.1"
 classifiers = [
@@ -82,3 +82,7 @@ directory = "parts/htmlcov"
 [tool.setuptools.dynamic]
 readme = {file = ["README.rst", "CHANGES.rst"]}
 
+[tool.zest-releaser]
+create-wheel = false
+extra-message = ""
+upload-pypi = false

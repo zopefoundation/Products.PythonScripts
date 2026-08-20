@@ -1,12 +1,16 @@
 Changelog
 =========
 
+5.3.1 (2026-08-20)
+------------------
+
+- Switch to PyPI Trusted Publishing.
+
+
 5.3 (2026-08-20)
 ----------------
 
 - Add support for Python 3.15.
-
-- Switch to PyPI Trusted Publishing.
 
 - Move package metadata from setup.py to pyproject.toml.
 
