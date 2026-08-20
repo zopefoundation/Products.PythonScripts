@@ -4,6 +4,10 @@ Changelog
 5.3 (unreleased)
 ----------------
 
+- Add support for Python 3.15.
+
+- Switch to PyPI Trusted Publishing.
+
 - Move package metadata from setup.py to pyproject.toml.
 
 
