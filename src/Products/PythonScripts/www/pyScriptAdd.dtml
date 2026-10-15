@@ -6,13 +6,13 @@
 
   <p class="form-help">
     Python Scripts allow you to add functionality to Zope by writing
-    scripts in the Python programming language that are exposed as callable 
-    Zope objects. You may choose to upload  the script from a local file by 
+    scripts in the Python programming language that are exposed as callable
+    Zope objects. You may choose to upload  the script from a local file by
     typing the file name or using the <em>browse</em> button.
   </p>
 
   <form action="manage_addPythonScript" method="post"
-        enctype="multipart/form-data" 
+        enctype="multipart/form-data"
         class="zmi-add zmi-pythonscript">
 
     <div class="form-group row">
