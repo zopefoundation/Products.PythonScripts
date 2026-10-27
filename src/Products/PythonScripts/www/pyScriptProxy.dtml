@@ -18,7 +18,7 @@
 				<select id="roles" class="form-control" name="roles:list" size="7" multiple>
 					<dtml-in valid_roles>
 						<dtml-if expr="_vars['sequence-item'] != 'Shared'">
-							<option 
+							<option
 								<dtml-if expr="manage_haveProxy(_vars['sequence-item'])">selected="selected"</dtml-if>
 							>&dtml-sequence-item;</option>
 						</dtml-if>

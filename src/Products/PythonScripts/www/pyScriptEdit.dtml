@@ -20,7 +20,7 @@
 				</div>
 			</div>
 		</dtml-with>
-	
+
 		<dtml-with getBindingAssignments>
 			<dtml-if getAssignedNamesInOrder>
 				<div class="form-group row ">
@@ -31,7 +31,7 @@
 				</div>
 			</dtml-if>
 		</dtml-with>
-	
+
 		<dtml-if errors>
 			<div class="alert alert-danger" role="alert">
 				<pre><dtml-var expr="'\n'.join(errors)" html_quote></pre>
@@ -42,9 +42,9 @@
 				<pre><dtml-var expr="'\n'.join(warnings)" html_quote></pre>
 			</div>
 		</dtml-if>
-	
+
 		<dtml-with keyword_args mapping>
-			<textarea id="content" data-contenttype="python" 
+			<textarea id="content" data-contenttype="python"
 				class="form-control zmi-zpt zmi-code col-sm-12"
 				name="body:text" wrap="off" rows="20">&dtml-body;</textarea>
 		</dtml-with>
@@ -74,7 +74,7 @@
 
 			<div class="input-group" title="Select Local File for Uploading">
 				<div class="custom-file">
-					<input type="file" name="file" class="custom-file-input" id="file-data" value="" 
+					<input type="file" name="file" class="custom-file-input" id="file-data" value=""
 						onchange="$('.custom-file label span').html($(this).val().replace(/^.*(\\|\/|\:)/, ''));" />
 					<label class="custom-file-label" for="file-data"><span>Choose file</span></label>
 				</div>
