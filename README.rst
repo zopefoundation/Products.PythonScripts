@@ -26,7 +26,11 @@ available to them by default. In the course of working with Zope,
 you will probably wish to make other modules available to script
 objects.
 
-The Utility.py module in the PythonScripts products provides a
+**Allowing additional modules is risky. Do not do this if untrusted
+users are allowed to add or edit scripts. You may expose your deployment
+to full compromise, including filesystem access on the host!**
+
+The AccessControl package products provides a
 simple way to make modules available for use by script objects
 on a site-wide basis. Before making a module available to Python
 scripts, you should carefully consider the potential for abuse
@@ -51,12 +55,12 @@ in the ``__init__.py`` will take effect. Here's how to do it:
 - In the new directory, create a file named ``__init__.py``.
 
 - Edit the ``__init__.py`` file, and add calls to the 'allow_module'
-  function (located in the Products.PythonScripts.Utility module),
+  function (located in the ``AccessControl.SecurityInfo`` module),
   passing the names of modules to be enabled for use by scripts.
   For example::
 
     # Global module assertions for Python scripts
-    from Products.PythonScripts.Utility import allow_module
+    from AccessControl.SecurityInfo import allow_module
 
     allow_module('base64')
     allow_module('re')
