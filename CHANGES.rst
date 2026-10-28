@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-5.4 (unreleased)
+5.4 (2026-10-28)
 ----------------
 
 - Deprecate BBB shims for ``allow_class`` and ``allow_module``
