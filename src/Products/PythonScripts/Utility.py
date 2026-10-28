@@ -13,7 +13,16 @@
 """Utility module for making simple security assertions for
    Python scripts."""
 
-# These have been relocated, and should be imported from AccessControl
-
 from AccessControl import allow_class  # noqa
 from AccessControl import allow_module  # noqa
+from zope.deprecation import deprecated
+
+
+deprecated('allow_class',
+           'Please import from `AccessControl.SecurityInfo`.'
+           'This backwards-compatibility shim will be removed in version 5.5.')
+
+
+deprecated('allow_module',
+           'Please import from `AccessControl.SecurityInfo`.'
+           'This backwards-compatibility shim will be removed in version 5.5.')
